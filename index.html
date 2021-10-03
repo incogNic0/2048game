@@ -4,6 +4,8 @@
   <meta charset="UTF-8">
   <meta http-equiv="X-UA-Compatible" content="IE=edge">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <link rel="stylesheet" href="css/header.css">
+  <link rel="stylesheet" href="css/gameBoard.css">
   <link rel="stylesheet" href="css/styles.css">
   <title>2048</title>
 </head>
@@ -15,26 +17,30 @@
           <h1 class="logo-text">2048</h1>
         </div>
       </div>
-      <div class="content-box">
-        <div class="scores-box">
+      <div class="scoreboard">
+        <div class="scoreboard-scores">
           <div class="scores-content">
-            <div class="score-current">
-              <h5>Score</h5>
-              <p>0</p>
+            <div class="scoreboard-content-box" id="current-score">
+              <div class="text-box">
+                <h5>Score</h5>
+                <p>0</p>
+              </div>
             </div>
-            <div class="score-best">
-              <h5>Best</h5>
-              <p>0</p>
+            <div class="scoreboard-content-box" id="best-score">
+              <div class="text-box">
+                <h5>Best</h5>
+                <p>0</p>
+              </div>
             </div>
           </div>
         </div>
-        <div class="controls-box">
-          <div class="controls-content">
-            <div class="new-game">
-              <h4>New Game</h4>
+        <div class="scoreboard-buttons">
+          <div class="buttons-content">
+            <div class="scoreboard-content-box" id="new-game">
+              <h5>New Game</h5>
             </div>
-            <div class="undo-last">
-              <h4>Undo</h4>
+            <div class="scoreboard-content-box" id="undo">
+              <h5>Undo</h5>
             </div>
           </div>
         </div>
@@ -72,6 +78,7 @@
       </div>
     </div>
   </main>
+  <h1 class="landscape-mode"><span>&#x21bb;</span></h1>
   <script src="js/scripts.js"></script>
 </body>
 </html>

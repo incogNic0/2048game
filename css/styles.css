@@ -9,165 +9,81 @@
 
 body {
   padding: 20px 150px;
-  background-color: wheat;
-}
-
-.container-header {
-  display: flex;
-  padding: 10px;
-  height: 150px;
-  background-color: orchid;
-  justify-content: space-evenly;
-}
-
-.logo {
-  display: inline-block;
-  flex-direction: column;
-  height: 100%;
-  width: 40%;
-  background-color: yellow; 
-  text-align: center;
-  border-radius: 5px;
-}
-
-.logo-text-box {
-  display: flex;
-  width: 100%;
-  height: 100%;
-  align-items: center;
-  justify-content: center;
-}
-
-.logo-text {
-  font-size: 64px;
-}
-
-.content-box {
-  height: 100%;
-  width: 40%;
-}
-
-.scores-box {
-  height: 50%;
-  width: 100%;
-}
-
-.scores-content {
-  display: flex;
-  height: 100%;
-  width: 100%;
-  justify-content: space-evenly;
-  align-items: center;
-}
-
-.scores-content div {
-  text-align: center;
-  padding-top: 5px;
-  height: 95%;
-  width: 30%;
   background-color: whitesmoke;
-  border-radius: 5px;
 }
 
-.scores-content div p {
-  font-size: 32px;
-}
-
-.controls-box {
-  height: 50%;
-}
-
-.controls-content {
-  display: flex;
-  height: 100%;
-  width: 100%;
-  justify-content: space-evenly;
-  align-items: center;
-}
-
-.controls-content div {
-  display: flex;
-  justify-content: center;
-  align-items: center;
-  padding-top: 5px;
-  height: 95%;
-  width: 30%;
-  background-color: whitesmoke;
-  border-radius: 5px;
-}
-
-.controls-content div h4 {
-  text-align: center;
-  font-size: 24px;
-}
-
-.instructions {
-  margin: 20px 0;
-  text-align: center;
-}
-.score-goal {
-  font-weight: bold;
-}
-
-.instructions p {
-  display: block;
-}
-
-.game-board {
-  display: flex;
-  flex-direction: column;
-  justify-content: space-evenly;
-  margin: auto;
-  height: 560px;
-  width: 560px;
-  background-color: rgb(120, 120, 120);
-  border-radius: 10px;
-}
-
-.row {
-  display: flex;
-  width: 100%;
-  height: 21%;
-  justify-content: space-evenly;
-  align-items: center;
-}
-
-.row-box {
-  display: inline-block;
-  height: 100%;
-  width: 21%;
-  border-radius: 10px;
-  background-color: rgb(180, 180, 180);
+.landscape-mode {
+  display: none;
 }
 
 @media screen and (max-width: 768px) {
   body {
     padding: 0;
   }
+  .container-header {
+    height: 130px;
+    width: 100vw;
+    padding: 5px;
+    justify-content: space-evenly;
+  }
   .logo {
-    width: 40%;
+    width: 30%;
   }
   .logo-text {
     font-size: 48px;
   }
-  .content-box {
-    width: 55%;
+  .scoreboard {
+    width: 40%;
   }
-  .scores-content div {
-    width: 45%;
+  .scoreboard-content-box {
+    width: 48%;
   }
-  .controls-content div {
-    width: 45%;
-  }
-  .controls-content div h4 {
+  .buttons-content div h4 {
     font-size: 20px;
   }
   .instructions {
-    margin: 10px 0;
+    margin: 5px 0;
   }
-  .game-board {
+}
+
+@media screen and (max-width: 400px) {
+  .container-header {
     width: 100vw;
-    height: 100vw;
+    height: 120px;
+  }
+  .logo {
+    width: 40%;
+  }
+  .logo-text {
+    font-size: 42px;
+  }
+  .scoreboard {
+    width: 55%;
+  }
+  .scoreboard-content-box {
+    width: 48%;
+  }
+  #new-game {
+    text-align: center;
+  }
+}
+
+@media screen and (max-width: 768px) and (orientation: landscape) {
+  .landscape-mode {
+    display: flex;
+    height: 100vh;
+    justify-content: center;
+    align-items: center;
+  }
+  .landscape-mode span {
+    display: block;
+    font-size: 200px;
+  }
+  header {
+    display: none;
+  }
+  main {
+    display: none;
   }
 }
 

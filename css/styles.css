@@ -12,16 +12,14 @@ body {
   background-color: whitesmoke;
 }
 
-.landscape-mode {
-  display: none;
-}
-
 .container {
   width: 560px;
   margin: auto;
 }
 
-
+.landscape-mode {
+  display: none;
+}
 
 @media screen and (max-width: 768px) {
   body {
@@ -48,9 +46,6 @@ body {
   .scoreboard-content-box {
     width: 48%;
   }
-  .buttons-content div h4 {
-    font-size: 20px;
-  }
   .instructions {
     margin: 5px 0;
   }
@@ -59,8 +54,7 @@ body {
     justify-content: space-around;
   }
   .controls-container button {
-    width: 20%;
-    height: 50px;
+    height: 70px;
   }
   .game-board {
     width: 100vw;
@@ -88,21 +82,17 @@ body {
   }
 }
 
-@media screen and (max-width: 768px) and (orientation: landscape) {
+@media screen and (orientation: landscape) and (max-height: 768px) {
   .landscape-mode {
     display: flex;
     height: 100vh;
     justify-content: center;
     align-items: center;
   }
-  .landscape-mode span {
-    display: block;
+  .landscape-mode p {
     font-size: 200px;
   }
-  header {
-    display: none;
-  }
-  main {
+  .container {
     display: none;
   }
 }

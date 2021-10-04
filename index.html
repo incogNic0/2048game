@@ -1,96 +1,120 @@
 <!DOCTYPE html>
 <html lang="en">
-<head>
-  <meta charset="UTF-8">
-  <meta http-equiv="X-UA-Compatible" content="IE=edge">
-  <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <link rel="stylesheet" href="css/header.css">
-  <link rel="stylesheet" href="css/gameBoard.css">
-  <link rel="stylesheet" href="css/controls.css">
-  <link rel="stylesheet" href="css/styles.css">
-  <title>2048</title>
-</head>
-<body>
-  <div class="container">
-    <header>
-      <div class="container-header">
-        <div class="logo">
-          <div class="logo-text-box">
-            <h1 class="logo-text">2048</h1>
-          </div>
-        </div>
-        <div class="scoreboard">
-          <div class="scoreboard-scores">
-            <div class="scores-content">
-              <div class="scoreboard-content-box" id="current-score">
-                <div class="text-box">
-                  <h5>Score</h5>
-                  <p>0</p>
-                </div>
-              </div>
-              <div class="scoreboard-content-box" id="best-score">
-                <div class="text-box">
-                  <h5>Best</h5>
-                  <p>0</p>
-                </div>
-              </div>
-            </div>
-          </div>
-          <div class="scoreboard-buttons">
-            <div class="buttons-content">
-              <div class="scoreboard-content-box">
-                <button id=new-game class="btn">New Game</button>
-              </div>
-              <div class="scoreboard-content-box">
-                <button id="undo" class="btn">Undo</button>
-              </div>
-            </div>
-          </div>
-        </div>
-      </div>
-      <div class="instructions">
-        <p>Join the tiles to get to <span class="score-goal">2048</span>!</p>
-      </div>
-    </header>
-    <main>
-      <div class="game-board">
-        <div class="row">
-          <div class="row-box" data-grid-x0-y0=""></div>
-          <div class="row-box" data-grid-x1-y0=""></div>
-          <div class="row-box" data-grid-x2-y0=""></div>
-          <div class="row-box" data-grid-x3-y0=""></div>
-        </div>
-        <div class="row">
-          <div class="row-box" data-grid-x0-y1=""></div>
-          <div class="row-box" data-grid-x1-y1=""></div>
-          <div class="row-box" data-grid-x2-y1=""></div>
-          <div class="row-box" data-grid-x3-y1=""></div>
-        </div>
-        <div class="row">
-          <div class="row-box" data-grid-x0-y2=""></div>
-          <div class="row-box" data-grid-x1-y2=""></div>
-          <div class="row-box" data-grid-x2-y2=""></div>
-          <div class="row-box" data-grid-x3-y2=""></div>
-        </div>
-        <div class="row">
-          <div class="row-box" data-grid-x0-y3=""></div>
-          <div class="row-box" data-grid-x1-y3=""></div>
-          <div class="row-box" data-grid-x2-y3=""></div>
-          <div class="row-box" data-grid-x3-y3=""></div>
-        </div>
-      </div>
-    </main>
-    <footer>
-      <div class="controls-container">
-        <button id="arrow-left">&#x2190;</button>
-        <button id="arrow-up">&#x2191;</button>
-        <button id="arrow-down">&#x2193;</button>
-        <button id="arrow-right">&#x2192;</button>
-      </div>
-    </footer>
-  </div>
-  <h1 class="landscape-mode"><span>&#x21bb;</span></h1>
-  <script src="js/game.js"></script>
-  <script src="js/scripts.js"></script>
-</body>
+	<head>
+		<meta charset="UTF-8" />
+		<meta http-equiv="X-UA-Compatible" content="IE=edge" />
+		<meta name="viewport" content="width=device-width, initial-scale=1.0" />
+		<link rel="stylesheet" href="css/header.css" />
+		<link rel="stylesheet" href="css/gameBoard.css" />
+		<link rel="stylesheet" href="css/controls.css" />
+		<link rel="stylesheet" href="css/styles.css" />
+		<title>2048</title>
+	</head>
+	<body>
+		<div class="container">
+			<header>
+				<div class="container-header">
+					<div class="logo">
+						<h1 class="logo-text">2048</h1>
+					</div>
+					<div class="scoreboard">
+						<div class="scoreboard-scores">
+							<div class="scoreboard-content-box" id="current-score">
+								<h5>Score</h5>
+								<p>0</p>
+							</div>
+							<div class="scoreboard-content-box" id="best-score">
+								<h5>Best</h5>
+								<p>0</p>
+							</div>
+						</div>
+						<div class="scoreboard-buttons">
+							<div class="scoreboard-content-box">
+								<button id="new-game" class="btn">New Game</button>
+							</div>
+							<div class="scoreboard-content-box">
+								<button id="undo" class="btn">Undo</button>
+							</div>
+						</div>
+					</div>
+				</div>
+				<div class="instructions">
+					<p>Join the tiles to get to <span class="score-goal">2048</span>!</p>
+				</div>
+			</header>
+			<main>
+				<div class="game-board">
+					<div class="row">
+						<div class="row-box" data-grid="x0-y0" data-occupied="false">
+							<p class="value">2</p>
+						</div>
+						<div class="row-box" data-grid="x1-y0" data-occupied="false">
+							<p class="value">2</p>
+						</div>
+						<div class="row-box" data-grid="x2-y0" data-occupied="false">
+							<p class="value">2</p>
+						</div>
+						<div class="row-box" data-grid="x3-y0" data-occupied="false">
+							<p class="value">2</p>
+						</div>
+					</div>
+					<div class="row">
+						<div class="row-box" data-grid="x0-y1" data-occupied="false">
+							<p class="value">2</p>
+						</div>
+						<div class="row-box" data-grid="x1-y1" data-occupied="false">
+							<p class="value">2</p>
+						</div>
+						<div class="row-box" data-grid="x2-y1" data-occupied="false">
+							<p class="value">2</p>
+						</div>
+						<div class="row-box" data-grid="x3-y1" data-occupied="false">
+							<p class="value">2</p>
+						</div>
+					</div>
+					<div class="row">
+						<div class="row-box" data-grid="x0-y2" data-occupied="false">
+							<p class="value">2</p>
+						</div>
+						<div class="row-box" data-grid="x1-y2" data-occupied="false">
+							<p class="value">2</p>
+						</div>
+						<div class="row-box" data-grid="x2-y2" data-occupied="false">
+							<p class="value">2</p>
+						</div>
+						<div class="row-box" data-grid="x3-y2" data-occupied="false">
+							<p class="value">2</p>
+						</div>
+					</div>
+					<div class="row">
+						<div class="row-box" data-grid="x0-y3" data-occupied="false">
+							<p class="value">2</p>
+						</div>
+						<div class="row-box" data-grid="x1-y3" data-occupied="false">
+							<p class="value">2</p>
+						</div>
+						<div class="row-box" data-grid="x2-y3" data-occupied="false">
+							<p class="value">2</p>
+						</div>
+						<div class="row-box" data-grid="x3-y3" data-occupied="false">
+							<p class="value">2</p>
+						</div>
+					</div>
+				</div>
+			</main>
+			<footer>
+				<div class="controls-container">
+					<button id="arrow-left" class="btn">&#x2190;</button>
+					<button id="arrow-up" class="btn">&#x2191;</button>
+					<button id="arrow-down" class="btn">&#x2193;</button>
+					<button id="arrow-right" class="btn">&#x2192;</button>
+				</div>
+			</footer>
+		</div>
+    <div class="landscape-mode">
+      <p>&#x21bb;</p>
+    </div>
+		<script src="js/game.js"></script>
+		<script src="js/scripts.js"></script>
+	</body>
 </html>

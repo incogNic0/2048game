@@ -24,10 +24,3 @@
   border-radius: 10px;
   background-color: rgb(180, 180, 180);
 }
-
-@media screen and (max-width: 768px) {
-  .game-board {
-    width: 100vw;
-    height: 100vw;
-  }
-}

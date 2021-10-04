@@ -63,10 +63,6 @@
   align-items: center;
 }
 
-#new-game {
-  text-align: center;
-}
-
 .scoreboard-content-box {
   display: flex;
   justify-content: center;
@@ -76,6 +72,16 @@
   background-color: wheat;
   border-radius: 5px;
 }
+
+.scoreboard-content-box button {
+  height: 100%;
+  width: 100%;
+  background-color: transparent;
+  border: none;
+  font-weight: bold;
+  padding: 5px;
+}
+
 
 .text-box {
   text-align: center;
@@ -92,4 +98,8 @@
 
 .instructions p {
   display: block;
+}
+
+btn:hover {
+  cursor: pointer;
 }

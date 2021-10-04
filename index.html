@@ -11,7 +11,7 @@
   <title>2048</title>
 </head>
 <body>
-  <dir class="container">
+  <div class="container">
     <header>
       <div class="container-header">
         <div class="logo">
@@ -38,11 +38,11 @@
           </div>
           <div class="scoreboard-buttons">
             <div class="buttons-content">
-              <div class="scoreboard-content-box" id="new-game">
-                <h5>New Game</h5>
+              <div class="scoreboard-content-box">
+                <button id=new-game class="btn">New Game</button>
               </div>
-              <div class="scoreboard-content-box" id="undo">
-                <h5>Undo</h5>
+              <div class="scoreboard-content-box">
+                <button id="undo" class="btn">Undo</button>
               </div>
             </div>
           </div>
@@ -55,28 +55,28 @@
     <main>
       <div class="game-board">
         <div class="row">
-          <div class="row-box"></div>
-          <div class="row-box"></div>
-          <div class="row-box"></div>
-          <div class="row-box"></div>
+          <div class="row-box" data-grid-x0-y0=""></div>
+          <div class="row-box" data-grid-x1-y0=""></div>
+          <div class="row-box" data-grid-x2-y0=""></div>
+          <div class="row-box" data-grid-x3-y0=""></div>
         </div>
         <div class="row">
-          <div class="row-box"></div>
-          <div class="row-box"></div>
-          <div class="row-box"></div>
-          <div class="row-box"></div>
+          <div class="row-box" data-grid-x0-y1=""></div>
+          <div class="row-box" data-grid-x1-y1=""></div>
+          <div class="row-box" data-grid-x2-y1=""></div>
+          <div class="row-box" data-grid-x3-y1=""></div>
         </div>
         <div class="row">
-          <div class="row-box"></div>
-          <div class="row-box"></div>
-          <div class="row-box"></div>
-          <div class="row-box"></div>
+          <div class="row-box" data-grid-x0-y2=""></div>
+          <div class="row-box" data-grid-x1-y2=""></div>
+          <div class="row-box" data-grid-x2-y2=""></div>
+          <div class="row-box" data-grid-x3-y2=""></div>
         </div>
         <div class="row">
-          <div class="row-box"></div>
-          <div class="row-box"></div>
-          <div class="row-box"></div>
-          <div class="row-box"></div>
+          <div class="row-box" data-grid-x0-y3=""></div>
+          <div class="row-box" data-grid-x1-y3=""></div>
+          <div class="row-box" data-grid-x2-y3=""></div>
+          <div class="row-box" data-grid-x3-y3=""></div>
         </div>
       </div>
     </main>
@@ -88,8 +88,9 @@
         <button id="arrow-right">&#x2192;</button>
       </div>
     </footer>
-  </dir>
+  </div>
   <h1 class="landscape-mode"><span>&#x21bb;</span></h1>
+  <script src="js/game.js"></script>
   <script src="js/scripts.js"></script>
 </body>
 </html>

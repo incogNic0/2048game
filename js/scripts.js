@@ -30,7 +30,7 @@ controlBtns.addEventListener('click', e => {
 // NEW GAME / UNDO
 scoreboardBtns.addEventListener('click', e => {
   if(e.target.id === 'new-game' || e.target.parentElement.id === 'new-game') {
-    console.log('new game!');
+    newRandomTile();
   } else if (e.target.id = 'undo' || e.target.parentElement.id === 'undo'  ) {
     console.log('undo!');
   }

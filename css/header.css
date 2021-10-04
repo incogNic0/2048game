@@ -2,7 +2,7 @@
 .container-header {
   display: flex;
   height: 150px;
-  width: 50%;
+  width: 100%;
   margin: auto;
   justify-content: space-between;
 }
@@ -61,6 +61,10 @@
   width: 100%;
   justify-content: space-between;
   align-items: center;
+}
+
+#new-game {
+  text-align: center;
 }
 
 .scoreboard-content-box {

@@ -11,82 +11,84 @@
   <title>2048</title>
 </head>
 <body>
-  <header>
-    <div class="container-header">
-      <div class="logo">
-        <div class="logo-text-box">
-          <h1 class="logo-text">2048</h1>
+  <dir class="container">
+    <header>
+      <div class="container-header">
+        <div class="logo">
+          <div class="logo-text-box">
+            <h1 class="logo-text">2048</h1>
+          </div>
         </div>
-      </div>
-      <div class="scoreboard">
-        <div class="scoreboard-scores">
-          <div class="scores-content">
-            <div class="scoreboard-content-box" id="current-score">
-              <div class="text-box">
-                <h5>Score</h5>
-                <p>0</p>
+        <div class="scoreboard">
+          <div class="scoreboard-scores">
+            <div class="scores-content">
+              <div class="scoreboard-content-box" id="current-score">
+                <div class="text-box">
+                  <h5>Score</h5>
+                  <p>0</p>
+                </div>
+              </div>
+              <div class="scoreboard-content-box" id="best-score">
+                <div class="text-box">
+                  <h5>Best</h5>
+                  <p>0</p>
+                </div>
               </div>
             </div>
-            <div class="scoreboard-content-box" id="best-score">
-              <div class="text-box">
-                <h5>Best</h5>
-                <p>0</p>
+          </div>
+          <div class="scoreboard-buttons">
+            <div class="buttons-content">
+              <div class="scoreboard-content-box" id="new-game">
+                <h5>New Game</h5>
+              </div>
+              <div class="scoreboard-content-box" id="undo">
+                <h5>Undo</h5>
               </div>
             </div>
           </div>
         </div>
-        <div class="scoreboard-buttons">
-          <div class="buttons-content">
-            <div class="scoreboard-content-box" id="new-game">
-              <h5>New Game</h5>
-            </div>
-            <div class="scoreboard-content-box" id="undo">
-              <h5>Undo</h5>
-            </div>
-          </div>
+      </div>
+      <div class="instructions">
+        <p>Join the tiles to get to <span class="score-goal">2048</span>!</p>
+      </div>
+    </header>
+    <main>
+      <div class="game-board">
+        <div class="row">
+          <div class="row-box"></div>
+          <div class="row-box"></div>
+          <div class="row-box"></div>
+          <div class="row-box"></div>
+        </div>
+        <div class="row">
+          <div class="row-box"></div>
+          <div class="row-box"></div>
+          <div class="row-box"></div>
+          <div class="row-box"></div>
+        </div>
+        <div class="row">
+          <div class="row-box"></div>
+          <div class="row-box"></div>
+          <div class="row-box"></div>
+          <div class="row-box"></div>
+        </div>
+        <div class="row">
+          <div class="row-box"></div>
+          <div class="row-box"></div>
+          <div class="row-box"></div>
+          <div class="row-box"></div>
         </div>
       </div>
-    </div>
-    <div class="instructions">
-      <p>Join the tiles to get to <span class="score-goal">2048</span>!</p>
-    </div>
-  </header>
-  <main>
-    <div class="game-board">
-      <div class="row">
-        <div class="row-box"></div>
-        <div class="row-box"></div>
-        <div class="row-box"></div>
-        <div class="row-box"></div>
+    </main>
+    <footer>
+      <div class="controls-container">
+        <button id="arrow-left">&#x2190;</button>
+        <button id="arrow-up">&#x2191;</button>
+        <button id="arrow-down">&#x2193;</button>
+        <button id="arrow-right">&#x2192;</button>
       </div>
-      <div class="row">
-        <div class="row-box"></div>
-        <div class="row-box"></div>
-        <div class="row-box"></div>
-        <div class="row-box"></div>
-      </div>
-      <div class="row">
-        <div class="row-box"></div>
-        <div class="row-box"></div>
-        <div class="row-box"></div>
-        <div class="row-box"></div>
-      </div>
-      <div class="row">
-        <div class="row-box"></div>
-        <div class="row-box"></div>
-        <div class="row-box"></div>
-        <div class="row-box"></div>
-      </div>
-    </div>
-  </main>
-  <footer>
-    <div class="controls-container">
-      <button class="arrow-left">&#x2190;</button>
-      <button class="arrow-up">&#x2191;</button>
-      <button class="arrow-down">&#x2193;</button>
-      <button class="arrow-right">&#x2192;</button>
-    </div>
-  </footer>
+    </footer>
+  </dir>
   <h1 class="landscape-mode"><span>&#x21bb;</span></h1>
   <script src="js/scripts.js"></script>
 </body>

@@ -1,0 +1,17 @@
+.controls-container {
+  width: 50%;
+  display: flex;
+  justify-content: space-between;
+  margin: auto;
+  margin-top: 10px;
+}
+
+.controls-container button {
+  font-size: 32px;
+  width: 22%;
+  background-color: burlywood;
+  text-align: center;
+  border-radius: 10px;
+  border: none;
+}
+

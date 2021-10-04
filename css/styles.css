@@ -44,6 +44,14 @@ body {
   .instructions {
     margin: 5px 0;
   }
+  .controls-container {
+    width: 100vw;
+    justify-content: space-around;
+  }
+  .controls-container button {
+    width: 20%;
+    height: 50px;
+  }
 }
 
 @media screen and (max-width: 400px) {

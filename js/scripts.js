@@ -13,10 +13,10 @@ window.addEventListener('keydown', (e) => {
       moveDown();
       break
     case 'ArrowLeft':
-      moveLeft();
+      moveTilesHorizontal('left');
       break;
     case 'ArrowRight':
-      moveRight();
+      moveTilesHorizontal('right');
     default:
       break;
   }
@@ -36,13 +36,6 @@ scoreboardBtns.addEventListener('click', e => {
   }
 });
 
-function moveRight() {
-  console.log('Move right!');
-};
-
-function moveLeft() {
-  console.log('Move left!');
-};
 
 function moveUp() {
   console.log('Move up!');

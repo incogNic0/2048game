@@ -1,4 +1,4 @@
-const currentBoard = [
+let currentBoard = [
   [0,0,0,0],
   [0,0,0,0],
   [0,0,0,0],
@@ -44,7 +44,6 @@ function updateBoardArrays (boxElement, boxValue) {
   const coords = boxElement.getAttribute("data-grid");
   previousBoard = currentBoard.map(row => (row.slice()));
   currentBoard[coords[4]][coords[1]] = boxValue;
-  console.log(currentBoard);
 }
 
 function gameOver() {
@@ -52,60 +51,90 @@ function gameOver() {
 }
 
 function moveTilesHorizontal(direction){
-  const moveTiles = direction === 'left' ? moveRowLeft : moveRowRight;
   for (let i=0; i<4; i++){
-    currentBoard[i] = moveTiles(currentBoard[i]);
+    currentBoard[i] = arrangeRow(currentBoard[i],direction);
   }
-  console.log(currentBoard);
+  updateGameBoard();
+  generateRandomTile();
 }
 
-function moveRowRight(arr) {
-  const row = combineLikeNeighborsRow(arr, 'right');
-  const output = []
-  for (let box of row) {
-    if(box > 0) {
-      output.push(box);
+function arrangeRow(row, direction) {
+  const sortedRow = sortRow(row, direction);
+  return combineLikeValuesRow(sortedRow, direction);
+}
+
+function sortRow(row,direction='right') {
+  const rowCopy = direction === 'left' ? row.slice().reverse() : row.slice();
+  const sortedRow = [];
+  const length = row.length-1;
+  /* 
+  Sort boxes with a value to the begining, and all unoccupied after
+  ie [0,4,0,32] --> 'left':[4,32,0,0] - 'right':[32,4,0,0]
+   */
+  for (let value of rowCopy) {
+    if(value > 0) {
+      sortedRow.push(value);
     } else {
-      output.unshift(0);
+      sortedRow.unshift(0);
     }
   }
-  return output;
+  return sortedRow.reverse();
+  // return combineLikeValuesRow(sortedRow, direction);
 }
 
-function moveRowLeft(arr) {
-  const row = combineLikeNeighborsRow(arr, 'left');
-  const output = [];
-  for (let box of row) {
-    if(box > 0) {
-      output.unshift(box);
-    } else {
-      output.push(0);
+function combineLikeValuesRow(row, direction) {
+  /* 
+  Combine non-zero value neighbors based on direction
+  For 'right' combine with left adajcent of same value
+  For 'left' combine with right adajcent of same value
+  Values can only be combined once per move.
+  ie. [4,0,4,8] --> 'left': [8,8,0,0] right: [0,0,8,8]
+      [4,4,4,0] --> 'left': [8,4,0,0] right: [0,0,4,8]
+  */
+  const rowCopy = row.slice();
+  let length = rowCopy.length-1;
+  for(let i=0; i<length; i++) {
+    if(rowCopy[i] === rowCopy[i+1]) {
+      rowCopy[i+1] = rowCopy[i+1] * 2;
+      rowCopy.splice(i, 1);
+      rowCopy.push(0);
     }
   }
-  return output;
+  return direction === 'right' ? rowCopy.reverse() : rowCopy;
 }
 
-function combineLikeNeighborsRow(arr, direction='right') {
-  // For direction of right, combine left side neighbor.
-  // For direction of left, combine right side neighbor.
-  const copyArr = direction === 'left' ? arr.slice().reverse() : arr.slice();
-  const output = [];
-  let i = copyArr.length-1;
-  while (i>0) {
-    if(copyArr[i] === copyArr[i-1]) {
-      output.push(copyArr[i]*2);
-      copyArr[i-1] = 0;
-    } else {
-      output.push(copyArr[i])
-    }
-    i--;
+function updateGameBoard() {
+  clearGameBoard();
+  fillOccupiedTiles();
+}
+
+function clearGameBoard() {
+  const occupiedBoxes = document.querySelectorAll("[data-occupied = 'true']");
+  for(const box of occupiedBoxes) {
+    box.children[0].classList.remove('occupied');
+    box.querySelector('.value').textContent = '';
+    box.setAttribute('data-occupied', 'false');
   }
-  output.push(copyArr[0])
-  return output.reverse();
 }
 
-const test = [4,4,4,0];
-const allZeros = [0,0,0,0]
-const noMatches = [0,32,64,0]
-const oneMatch = [0,4,4,4]
-const allMatches = [4,4,4,4]
+function fillOccupiedTiles() {
+  for (let y=0; y<4; y++) {
+    for(let x=0; x<4; x++) {
+      const boxValue = currentBoard[y][x];
+      if(boxValue > 0) {
+        // get box element
+        const box = document.querySelector(`[data-grid = 'x${x}-y${y}']`);
+        occupyBox(box, boxValue);
+      }
+    }
+  }
+}
+
+
+// TESTS
+const test = [4,0,0,4]; // left:[8,0,0,0] - right[0,0,0,8]
+const allZeros = [0,0,0,0] // left: [0,0,0,0] - right:[0,0,0,0]
+const noMatches = [0,32,64,0] // left: [32,64,0,0] - right:[0,0,32,64]
+const oneMatch = [0,4,4,4]  // left: [8,4,0,0] - right: [0,0,4,8]
+const allMatches = [4,4,4,4] // left: [8,8,0,0] right: [0,0,8,8,]
+

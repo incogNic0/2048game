@@ -7,10 +7,10 @@ const scoreboardBtns = document.querySelector('.scoreboard-buttons');
 window.addEventListener('keydown', (e) => {
   switch(e.code) {
     case 'ArrowUp':
-      moveUp();
+      moveTilesVertical('up');
       break;
     case 'ArrowDown':
-      moveDown();
+      moveTilesVertical('down');
       break
     case 'ArrowLeft':
       moveTilesHorizontal('left');
@@ -44,12 +44,3 @@ scoreboardBtns.addEventListener('click', e => {
     updateGameBoard();
   }
 });
-
-
-function moveUp() {
-  console.log('Move up!');
-};
-
-function moveDown() {
-  console.log('Move down!');
-};

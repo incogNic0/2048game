@@ -50,39 +50,54 @@ function gameOver() {
   console.log('Game Over :(');
 }
 
-function moveTilesHorizontal(direction){
-  for (let i=0; i<4; i++){
-    currentBoard[i] = arrangeRow(currentBoard[i],direction);
+// ========== Movement =====================
+function moveTilesHorizontal(direction) {
+  currentBoard.map((row, i) => {
+    currentBoard[i] = arrangeTiles(row,direction);
+  });
+  updateGameBoard();
+  generateRandomTile();
+}
+
+function moveTilesVertical(direction) {
+  const dir = direction === 'up' ? 'left' : 'right';
+  for (let x=0; x<4; x++) {
+    // Create an array of each currentBoard column
+    const column = currentBoard.map((row => (row[x])));
+    // Sort and Combine Same Column Values
+    const sortedColumn = arrangeTiles(column, dir);
+    // Update each currentBoard Column
+    currentBoard.map((row, index) => {
+      return row[x] = sortedColumn[index];
+    });
   }
   updateGameBoard();
   generateRandomTile();
 }
 
-function arrangeRow(row, direction) {
-  const sortedRow = sortRow(row, direction);
-  return combineLikeValuesRow(sortedRow, direction);
+function arrangeTiles(tilesArr, direction) {
+  const sortedTiles = sortTiles(tilesArr, direction);
+  return combineLikeValues(sortedTiles, direction);
 }
 
-function sortRow(row,direction='right') {
-  const rowCopy = direction === 'left' ? row.slice().reverse() : row.slice();
-  const sortedRow = [];
-  const length = row.length-1;
+function sortTiles(tilesArr,direction='right') {
+  const tilesCopy = direction === 'left' ? tilesArr.slice().reverse() : tilesArr.slice();
+  const sortedTiles = [];
   /* 
   Sort boxes with a value to the begining, and all unoccupied after
   ie [0,4,0,32] --> 'left':[4,32,0,0] - 'right':[32,4,0,0]
    */
-  for (let value of rowCopy) {
+  for (let value of tilesCopy) {
     if(value > 0) {
-      sortedRow.push(value);
+      sortedTiles.push(value);
     } else {
-      sortedRow.unshift(0);
+      sortedTiles.unshift(0);
     }
   }
-  return sortedRow.reverse();
-  // return combineLikeValuesRow(sortedRow, direction);
+  return sortedTiles.reverse();
 }
 
-function combineLikeValuesRow(row, direction) {
+function combineLikeValues(tilesArr, direction) {
   /* 
   Combine non-zero value neighbors based on direction
   For 'right' combine with left adajcent of same value
@@ -91,16 +106,16 @@ function combineLikeValuesRow(row, direction) {
   ie. [4,0,4,8] --> 'left': [8,8,0,0] right: [0,0,8,8]
       [4,4,4,0] --> 'left': [8,4,0,0] right: [0,0,4,8]
   */
-  const rowCopy = row.slice();
-  let length = rowCopy.length-1;
+  const tilesCopy = tilesArr.slice();
+  let length = tilesCopy.length-1;
   for(let i=0; i<length; i++) {
-    if(rowCopy[i] === rowCopy[i+1]) {
-      rowCopy[i+1] = rowCopy[i+1] * 2;
-      rowCopy.splice(i, 1);
-      rowCopy.push(0);
+    if(tilesCopy[i] === tilesCopy[i+1]) {
+      tilesCopy[i+1] = tilesCopy[i+1] * 2;
+      tilesCopy.splice(i, 1);
+      tilesCopy.push(0);
     }
   }
-  return direction === 'right' ? rowCopy.reverse() : rowCopy;
+  return direction === 'right' ? tilesCopy.reverse() : tilesCopy;
 }
 
 function updateGameBoard() {
@@ -131,10 +146,18 @@ function fillOccupiedTiles() {
 }
 
 
-// TESTS
+// Tests Horizontal
 const test = [4,0,0,4]; // left:[8,0,0,0] - right[0,0,0,8]
 const allZeros = [0,0,0,0] // left: [0,0,0,0] - right:[0,0,0,0]
 const noMatches = [0,32,64,0] // left: [32,64,0,0] - right:[0,0,32,64]
 const oneMatch = [0,4,4,4]  // left: [8,4,0,0] - right: [0,0,4,8]
 const allMatches = [4,4,4,4] // left: [8,8,0,0] right: [0,0,8,8,]
+
+// Tests Vertical
+const vertTest = [
+  [4,0,0,4],
+  [0,0,32,4],
+  [0,0,64,4],
+  [4,0,0,0]
+];
 

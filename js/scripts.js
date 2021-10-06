@@ -5,29 +5,28 @@ const scoreboardBtns = document.querySelector('.scoreboard-buttons');
 
 // KEYPRESS
 window.addEventListener('keydown', (e) => {
-  switch(e.code) {
-    case 'ArrowUp':
-      moveTilesVertical('up');
-      break;
-    case 'ArrowDown':
-      moveTilesVertical('down');
-      break
-    case 'ArrowLeft':
-      moveTilesHorizontal('left');
-      break;
-    case 'ArrowRight':
-      moveTilesHorizontal('right');
-    default:
-      break;
-    updateGameBoard();
-    generateRandomTile();
+  const validKeyInputs = {
+    'ArrowUp': 'up',
+    'ArrowDown': 'down',
+    'ArrowLeft': 'left',
+    'ArrowRight': 'right',
   }
-
-});
+  if(validKeyInputs[e.code]) {
+    moveTiles(validKeyInputs[e.code]);
+  }
+})
 
 // DIRECTIONAL ARROWS
 controlBtns.addEventListener('click', e => {
-  console.log(e.target.id);
+  const validTargets = {
+    'arrow-up': 'up',
+    'arrow-down': 'down',
+    'arrow-left': 'left',
+    'arrow-right': 'right'
+  }
+  if(validTargets[e.target.id]) {
+    moveTiles(validTargets[e.target.id]);
+  }
 })
 
 // NEW GAME / UNDO
@@ -44,6 +43,10 @@ scoreboardBtns.addEventListener('click', e => {
     currentScore = 0;
     clearGameBoard();
   } else if (e.target.id = 'undo' || e.target.parentElement.id === 'undo'  ) {
-    updateGameBoard();
+    undoPreviousMove();
   }
 });
+
+function undoPreviousMove() {
+  console.log('Currently under development... :)');
+}

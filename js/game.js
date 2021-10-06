@@ -7,6 +7,25 @@ let currentBoard = [
 
 let previousBoard = [];
 
+const tileColors = {
+  2: 'palegoldenrod',
+  4: 'burlywood',
+  8: 'chartreuse',
+  16: 'crimson',
+  32: 'darkmagenta',
+  64: 'darkorange',
+  128: 'darkseagreen',
+  256: 'darksalmon',
+  512: 'goldenrod',
+  1024: 'mediumorchid',
+  2048: 'rebeccapurple',
+  4096: 'sienna',
+  8192: 'slateblue',
+  16384: 'rosybrown',
+  32768: 'palevioletred',
+  65536: 'palegoldenrod'
+}
+
 function generateRandomTile() {
 	const value = getValue(); // Generate random value (2 or 4) for new box
 	const box = selectRandomBox(); // Get random box for new tile location
@@ -38,6 +57,7 @@ function occupyBox(boxElement, boxValue) {
   boxElement.children[0].classList.add('occupied');
   boxElement.setAttribute("data-occupied", "true")
   boxElement.querySelector('.value').textContent = boxValue;
+  boxElement.querySelector('.value-box').style.backgroundColor =  tileColors[boxValue];
 }
 
 function updateBoardArrays (boxElement, boxValue) {

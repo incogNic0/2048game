@@ -29,7 +29,7 @@
   height: 100%;
   width: 100%;
   border-radius: 10px;
-  background-color: yellow;
+  /* background-color: yellow; */
   display: flex;
   justify-content: center;
   align-items: center;
@@ -42,16 +42,9 @@
 }
 
 .occupied {
-  background-color: yellow;
   animation: popIn .5s;
   opacity: 1;
   transform: scale(1);
-  transition: .5s;
-}
-
-.unoccupied {
-  animation: popOut .5s;
-  opacity: 0;
   transition: .5s;
 }
 

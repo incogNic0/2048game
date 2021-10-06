@@ -4,8 +4,11 @@ let currentBoard = [
   [0,0,0,0],
   [0,0,0,0]
 ]
-
 let previousBoard = [];
+
+let previouScore = 0;
+let turnScore = 0;
+let currentScore = 0;
 
 const tileColors = {
   2: 'palegoldenrod',
@@ -76,6 +79,7 @@ function moveTilesHorizontal(direction) {
     currentBoard[i] = arrangeTiles(row,direction);
   });
   updateGameBoard();
+  updateScoreBoard();
   generateRandomTile();
 }
 
@@ -92,6 +96,7 @@ function moveTilesVertical(direction) {
     });
   }
   updateGameBoard();
+  updateScoreBoard();
   generateRandomTile();
 }
 
@@ -130,6 +135,7 @@ function combineLikeValues(tilesArr, direction) {
   let length = tilesCopy.length-1;
   for(let i=0; i<length; i++) {
     if(tilesCopy[i] === tilesCopy[i+1]) {
+      turnScore += Number(tilesCopy[i]) * 2
       tilesCopy[i+1] = tilesCopy[i+1] * 2;
       tilesCopy.splice(i, 1);
       tilesCopy.push(0);
@@ -163,6 +169,13 @@ function fillOccupiedTiles() {
       }
     }
   }
+}
+
+function updateScoreBoard(){
+  previouScore = currentScore;
+  currentScore = previouScore + turnScore;
+  document.querySelector('#currentScore').textContent = currentScore;
+  turnScore = 0;
 }
 
 

@@ -29,7 +29,6 @@
   height: 100%;
   width: 100%;
   border-radius: 10px;
-  /* background-color: yellow; */
   display: flex;
   justify-content: center;
   align-items: center;
@@ -46,6 +45,46 @@
   opacity: 1;
   transform: scale(1);
   transition: .5s;
+}
+
+.bg-2 {
+  background-color: palegoldenrod;
+}
+.bg-4 {
+  background-color: burlywood;
+}
+.bg-8 {
+  background-color: chartreuse;
+}
+.bg-16 {
+  background-color: crimson;
+}
+.bg-32 {
+  background-color: darkmagenta;
+}
+.bg-64 {
+  background-color: darkorange;
+}
+.bg-128 {
+  background-color: darkseagreen;
+}
+.bg-256 {
+  background-color: darksalmon;
+}
+.bg-512 {
+  background-color: goldenrod;
+}
+.bg-1024 {
+  background-color: mediumorchid;
+}
+.bg-2048 {
+  background-color: rebeccapurple;
+}
+.bg-4096 {
+  background-color: sienna;
+}
+.bg-8192 {
+  background-color: slateblue;
 }
 
 @keyframes popIn {

@@ -39,6 +39,9 @@ scoreboardBtns.addEventListener('click', e => {
       [0,0,0,0],
       [0,0,0,0]
     ]
+    previousBoard = [];
+    previouScore = 0;
+    currentScore = 0;
     clearGameBoard();
   } else if (e.target.id = 'undo' || e.target.parentElement.id === 'undo'  ) {
     updateGameBoard();

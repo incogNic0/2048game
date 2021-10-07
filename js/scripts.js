@@ -44,6 +44,7 @@ scoreboardBtns.addEventListener('click', e => {
     previouScore = 0;
     currentScore = 0;
     clearGameBoard();
+    generateRandomTile();
   } else if (e.target.id = 'undo' || e.target.parentElement.id === 'undo'  ) {
     undoPreviousMove();
   }
@@ -51,4 +52,8 @@ scoreboardBtns.addEventListener('click', e => {
 
 function undoPreviousMove() {
   console.log('Currently under development... :)');
+}
+
+function newGame() {
+  
 }

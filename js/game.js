@@ -16,6 +16,7 @@ let turnScore = 0;
 // Score after move
 let currentScore = 0;
 
+//============ UI ==================
 function generateRandomTile() {
   // Generate random value (2 or 4) for new box
 	const value = getValue();
@@ -27,73 +28,104 @@ function generateRandomTile() {
     // Update currentBoard and previousBoard values
     updateBoardArrays(box, value);
   } else {
-    // All boxes are filled and no valid tile combining left
+    // All boxes are filled and no valid tile combinations left
     gameOver();
   }
 }
 
-// New tiles have a starting value of 2 or 4
-function getValue() {
-	const nums = [2, 4];
-	return nums[Math.round(Math.random() * 1)];
-}
-// Randomly select location of new tile from empty grid-boxes
-function selectRandomBox() {
-  // Get all unoccupied boxes
-  const unoccupiedBoxes = document.querySelectorAll('[data-occupied="false"]');
-  const numBoxes = unoccupiedBoxes.length;
-  if (!numBoxes) {
-    // Game Over
-    return;
-  }
-  // Return a random unoccupied box
-  return unoccupiedBoxes[Math.floor(Math.random() * numBoxes)];
-}
 
+// Displays tile value and unique bg color for each value
 function occupyBox(boxElement, boxValue) {
   const valueText = boxElement.querySelector('.value');
   valueText.textContent = boxValue
   // Use smaller fonts for larger values
-  if(boxValue > 999) {
+  if(boxValue > 999)
     valueText.classList.add('value-four-digit');
-  } else if(boxValue > 99) {
+  if(boxValue > 99)
     valueText.classList.add('value-three-digit');
-  }
-  boxElement.children[0].classList.add('occupied');
-  boxElement.setAttribute("data-occupied", "true")
   // Set unique bg color depending on tile value
-  boxElement.querySelector('.value-box').classList.add(`bg-${boxValue}`);
-}
-
-function updateBoardArrays (boxElement, boxValue) {
-  const coords = boxElement.getAttribute("data-grid");
-  // Copy currentBoard prior to new tile
-  previousBoard = currentBoard.map(row => (row.slice()));
-  // Update currentBoard to include new random tile position and value
-  currentBoard[coords[4]][coords[1]] = boxValue;
+  boxElement.children[0].classList.add('occupied', `bg-${boxValue}`);
+  boxElement.setAttribute("data-occupied", "true")
 }
 
 function gameOver() {
   console.log('Game Over :(');
 }
 
+// Clears UI and then refills all occupied tiles (values !== 0)
+function updateGameBoard() {
+  clearGameBoard();
+  fillOccupiedTiles();
+}
+
+// Clears and resets all UI tiles
+function clearGameBoard() {
+  // Get all occupied boxes
+  const occupiedBoxes = document.querySelectorAll("[data-occupied = 'true']");
+  // Resets each occupied box
+  for(const box of occupiedBoxes) {
+    const valueDisplay = box.children[0]
+    // valueDisplay.classList.add('slide-right');
+    // Remove 'occupy' and 'bg-###' classes
+    valueDisplay.classList = 'value-box';
+    // Remove Value from box
+    valueDisplay.children[0].textContent = ''
+    // Remove classes that reduce font size for larger values
+    valueDisplay.children[0].classList = 'value'
+    // Set Box to unoccuped
+    box.setAttribute('data-occupied', 'false');
+  }
+}
+
+// Puts tiles in corresponding UI grid positions
+function fillOccupiedTiles() {
+  // Loops through currentBoard array
+  for (let y=0; y<4; y++) {
+    for(let x=0; x<4; x++) {
+      // Creates tile in grid-box if value exists, or leaves empty
+      const boxValue = currentBoard[y][x];
+      if(boxValue > 0) {
+        const box = document.querySelector(`[data-grid = 'x${x}-y${y}']`);
+        occupyBox(box, boxValue);
+      }
+    }
+  }
+}
+
+// Update scoreboard UI
+function updateScoreBoard(){
+  previouScore = currentScore;
+  currentScore = previouScore + turnScore;
+  document.querySelector('#currentScore').textContent = currentScore;
+  turnScore = 0;
+}
+
 // ========== Movement =====================
 function moveTiles(direction) {
+  // copy currentBoard to see if there's any change after move
+  // if there's no changes move is not allowed
+  const tempCurrent = currentBoard.map(row => (row.slice()));
   if (direction === 'up' || direction === 'down') {
     moveTilesVertically(direction)
+    if(!boardChanged(tempCurrent,currentBoard))
+      return;
   } else {
     moveTilesHorizontally(direction);
+    if(!boardChanged(tempCurrent,currentBoard))
+      return;
   }
   updateGameBoard();
   updateScoreBoard();
   generateRandomTile(); 
 }
+
 // Tiles vorizontal movement
 function moveTilesHorizontally(direction) {
   currentBoard.map((row, i) => {
     currentBoard[i] = arrangeTiles(row,direction);
   });
 }
+
 // Tiles vertical movement
 function moveTilesVertically(direction) {
   const dir = direction === 'up' ? 'left' : 'right';
@@ -110,11 +142,13 @@ function moveTilesVertically(direction) {
     });
   }
 }
+
 // Sort and combine adjacent like valued tiles based on direction
 function arrangeTiles(tilesArr, direction) {
   const sortedTiles = sortTiles(tilesArr, direction);
   return combineLikeValues(sortedTiles, direction);
 }
+
 // Sort tiles prior to combining
 function sortTiles(tilesArr,direction) {
   const tilesCopy = direction === 'left' ? tilesArr.slice().reverse() : tilesArr.slice();
@@ -162,63 +196,44 @@ function combineLikeValues(tilesArr, direction) {
   return direction === 'right' ? tilesCopy.reverse() : tilesCopy;
 }
 
-// Clears UI and then refills all occupied tiles (values !== 0)
-function updateGameBoard() {
-  clearGameBoard();
-  fillOccupiedTiles();
+
+// ============ Utilities ==============
+
+// Updates previousBoard for 'undo' purposes and updates currentBoard with new random tile value
+function updateBoardArrays (boxElement, boxValue) {
+  const coords = boxElement.getAttribute("data-grid");
+  // Copy currentBoard prior to new tile
+  previousBoard = currentBoard.map(row => (row.slice()));
+  // Update currentBoard to include new random tile position and value
+  currentBoard[coords[4]][coords[1]] = boxValue;
 }
-// Clears all UI tiles
-function clearGameBoard() {
-  // Get all occupied boxes
-  const occupiedBoxes = document.querySelectorAll("[data-occupied = 'true']");
-  // Resets each occupied box
-  for(const box of occupiedBoxes) {
-    const valueDisplay = box.children[0]
-    // Remove 'occupy' and 'bg-###' classes
-    valueDisplay.classList = 'value-box';
-    // Remove Value from box
-    valueDisplay.children[0].textContent = ''
-    // Remove classes that reduce font size for larger values
-    valueDisplay.children[0].classList = 'value'
-    // Set Box to unoccuped
-    box.setAttribute('data-occupied', 'false');
-  }
-}
-// Put tiles in corresponding UI grid positions
-function fillOccupiedTiles() {
-  // Loops through currentBoard array
-  for (let y=0; y<4; y++) {
-    for(let x=0; x<4; x++) {
-      // Creates tile in grid-box if value exists, or leaves empty
-      const boxValue = currentBoard[y][x];
-      if(boxValue > 0) {
-        const box = document.querySelector(`[data-grid = 'x${x}-y${y}']`);
-        occupyBox(box, boxValue);
-      }
+
+// Checks if move changes board to determine if move is valid or not
+function boardChanged(board1,board2) {
+  for (let y=0, length = board1.length; y<length; y++) {
+    for(let x=0, length = board1[y].length; x< length; x++) {
+      if (board1[y][x] !== board2[y][x])
+        return true;
     }
   }
-}
-// Score keeping
-function updateScoreBoard(){
-  previouScore = currentScore;
-  currentScore = previouScore + turnScore;
-  document.querySelector('#currentScore').textContent = currentScore;
-  turnScore = 0;
+  return false;
 }
 
+// Sets random value for new tile (2 or 4)
+function getValue() {
+	const nums = [2, 4];
+	return nums[Math.round(Math.random() * 1)];
+}
 
-// Tests Horizontal
-const test = [4,0,0,4]; // left:[8,0,0,0] - right[0,0,0,8]
-const allZeros = [0,0,0,0] // left: [0,0,0,0] - right:[0,0,0,0]
-const noMatches = [0,32,64,0] // left: [32,64,0,0] - right:[0,0,32,64]
-const oneMatch = [0,4,4,4]  // left: [8,4,0,0] - right: [0,0,4,8]
-const allMatches = [4,4,4,4] // left: [8,8,0,0] right: [0,0,8,8,]
-
-// Tests Vertical
-const vertTest = [
-  [4,0,0,4],
-  [0,0,32,4],
-  [0,0,64,4],
-  [4,0,0,0]
-];
+// Randomly selects location of new tile from empty grid-boxes
+function selectRandomBox() {
+  // Get all unoccupied boxes
+  const unoccupiedBoxes = document.querySelectorAll('[data-occupied="false"]');
+  const numBoxes = unoccupiedBoxes.length;
+  if (!numBoxes)
+    // Game Over
+    return;
+  // Return a random unoccupied box
+  return unoccupiedBoxes[Math.floor(Math.random() * numBoxes)];
+}
 

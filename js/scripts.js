@@ -2,7 +2,9 @@ const controlBtns = document.querySelector('.controls-container');
 const scoreboardBtns = document.querySelector('.scoreboard-buttons');
 
 // === EVENT LISTENERS ===
-
+window.onload = function() {
+  generateRandomTile();
+}
 // KEYPRESS
 window.addEventListener('keydown', (e) => {
   const validKeyInputs = {

@@ -3,7 +3,8 @@
   padding: 0;
   box-sizing: border-box;
   font-size: 16px;
-  font-family: 'Franklin Gothic Medium', 'Arial Narrow', Arial, sans-serif;
+  font-family: 'Oswald', sans-serif;
+  font-weight: 400;
   letter-spacing: 1.5px;
 }
 
@@ -27,6 +28,7 @@ body {
   }
   .container {
     width: 100vw;
+    margin-top: 10px;
   }
   .container-header {
     height: 130px;
@@ -38,7 +40,7 @@ body {
     width: 30%;
   }
   .logo-text {
-    font-size: 48px;
+    font-size: 54px;
   }
   .scoreboard {
     width: 40%;
@@ -62,7 +64,10 @@ body {
   }
 }
 
-@media screen and (max-width: 400px) {
+@media screen and (max-width: 450px) {
+  .container {
+    margin-top: 10px;
+  }
   .container-header {
     width: 100%;
     height: 120px;
@@ -72,13 +77,36 @@ body {
     width: 40%;
   }
   .logo-text {
-    font-size: 42px;
+    color: #dee;
+    font-size: 52px;
+    font-weight: 400;
   }
   .scoreboard {
     width: 55%;
   }
   .scoreboard-content-box {
     width: 48%;
+  }
+  .value {
+    font-size: 2.3rem;
+  }
+  .value-three-digit {
+    font-size: 2rem;
+  }
+  .value-four-digit {
+    font-size: 1.75rem;
+  }
+}
+
+@media screen and (max-width: 300px) {
+  .value {
+    font-size: 2rem;
+  }
+  .value-three-digit {
+    font-size: 1.5rem;
+  }
+  .value-four-digit {
+    font-size: 1.3rem;
   }
 }
 

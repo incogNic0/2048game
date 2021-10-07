@@ -51,9 +51,16 @@ function selectRandomBox() {
 }
 
 function occupyBox(boxElement, boxValue) {
+  const valueText = boxElement.querySelector('.value');
+  valueText.textContent = boxValue
+  // Use smaller fonts for larger values
+  if(boxValue > 999) {
+    valueText.classList.add('value-four-digit');
+  } else if(boxValue > 99) {
+    valueText.classList.add('value-three-digit');
+  }
   boxElement.children[0].classList.add('occupied');
   boxElement.setAttribute("data-occupied", "true")
-  boxElement.querySelector('.value').textContent = boxValue;
   // Set unique bg color depending on tile value
   boxElement.querySelector('.value-box').classList.add(`bg-${boxValue}`);
 }
@@ -166,8 +173,14 @@ function clearGameBoard() {
   const occupiedBoxes = document.querySelectorAll("[data-occupied = 'true']");
   // Resets each occupied box
   for(const box of occupiedBoxes) {
-    box.children[0].classList = 'value-box';
-    box.querySelector('.value').textContent = '';
+    const valueDisplay = box.children[0]
+    // Remove 'occupy' and 'bg-###' classes
+    valueDisplay.classList = 'value-box';
+    // Remove Value from box
+    valueDisplay.children[0].textContent = ''
+    // Remove classes that reduce font size for larger values
+    valueDisplay.children[0].classList = 'value'
+    // Set Box to unoccuped
     box.setAttribute('data-occupied', 'false');
   }
 }

@@ -39,6 +39,12 @@
 .value {
   font-size: 3rem;
 }
+.value-three-digit {
+  font-size: 2.7rem;
+}
+.value-four-digit {
+  font-size: 2.4rem;
+}
 
 .occupied {
   animation: popIn .5s;
@@ -46,6 +52,7 @@
   transform: scale(1);
   transition: .5s;
 }
+
 
 .bg-2 {
   background-color: palegoldenrod;

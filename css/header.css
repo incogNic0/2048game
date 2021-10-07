@@ -19,7 +19,9 @@
 }
 
 .logo-text {
-  font-size: 58px;
+  color: #dee;
+  font-size: 72px;
+  font-weight: 400;
 }
 
 .scoreboard {

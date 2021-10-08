@@ -41,19 +41,6 @@ window.addEventListener('keydown', (e) => {
   }
 })
 
-// DIRECTIONAL ARROWS
-controlBtns.addEventListener('click', e => {
-  const validTargets = {
-    'arrow-up': 'up',
-    'arrow-down': 'down',
-    'arrow-left': 'left',
-    'arrow-right': 'right'
-  }
-  if(validTargets[e.target.id]) {
-    moveTiles(validTargets[e.target.id]);
-  }
-})
-
 // NEW GAME / UNDO
 scoreboardBtns.addEventListener('click', e => {
   if(e.target.id === 'new-game' || e.target.parentElement.id === 'new-game') {

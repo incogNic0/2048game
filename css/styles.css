@@ -87,8 +87,8 @@ body {
   .scoreboard-content-box {
     width: 48%;
   }
-  .value {
-    font-size: 2.3rem;
+  .value-box {
+    font-size: 2.1rem;
   }
   .value-three-digit {
     font-size: 2rem;
@@ -99,7 +99,7 @@ body {
 }
 
 @media screen and (max-width: 300px) {
-  .value {
+  .value-box {
     font-size: 2rem;
   }
   .value-three-digit {

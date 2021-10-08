@@ -36,15 +36,16 @@ function generateRandomTile() {
 
 // Displays tile value and unique bg color for each value
 function occupyBox(boxElement, boxValue) {
-  const valueText = boxElement.querySelector('.value');
-  valueText.textContent = boxValue
+  const valueBox = boxElement.children[0];
+  // const valueText = boxElement.querySelector('.value');
+  valueBox.textContent = boxValue
   // Use smaller fonts for larger values
   if(boxValue > 999)
-    valueText.classList.add('value-four-digit');
+    valueBox.classList.add('value-four-digit');
   if(boxValue > 99)
-    valueText.classList.add('value-three-digit');
+    valueBox.classList.add('value-three-digit');
   // Set unique bg color depending on tile value
-  boxElement.children[0].classList.add('occupied', `bg-${boxValue}`);
+  valueBox.classList.add('occupied', `bg-${boxValue}`);
   boxElement.setAttribute("data-occupied", "true")
 }
 
@@ -64,14 +65,12 @@ function clearGameBoard() {
   const occupiedBoxes = document.querySelectorAll("[data-occupied = 'true']");
   // Resets each occupied box
   for(const box of occupiedBoxes) {
-    const valueDisplay = box.children[0]
+    const valueBox = box.children[0]
     // valueDisplay.classList.add('slide-right');
     // Remove 'occupy' and 'bg-###' classes
-    valueDisplay.classList = 'value-box';
+    valueBox.classList = 'value-box';
     // Remove Value from box
-    valueDisplay.children[0].textContent = ''
-    // Remove classes that reduce font size for larger values
-    valueDisplay.children[0].classList = 'value'
+    valueBox.textContent = ''
     // Set Box to unoccuped
     box.setAttribute('data-occupied', 'false');
   }

@@ -11,6 +11,7 @@
 body {
   padding: 20px 150px;
   background-color: whitesmoke;
+  overscroll-behavior-y: contain;
 }
 
 .container {

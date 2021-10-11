@@ -9,7 +9,6 @@ let currentBoard = [
   [0,0,0,0],
   [0,0,0,0]
 ]
-// let previousBoard = [];
 
 // Score prior to most recent move.  Allows 'undo' of most recent move only
 let previouScore = 0;
@@ -19,6 +18,8 @@ let turnScore = 0;
 let currentScore = 0;
 
 //============ UI ==================
+
+// ------------ New Box ---------------
 function generateRandomTile() {
   // Generate random value (2 or 4) for new box
 	const value = getValue();
@@ -28,17 +29,34 @@ function generateRandomTile() {
     // Update UI
     occupyBox(box,value);
     // Update currentBoard and previousBoard values
-    // testCurrent = document.querySelectorAll('.occupied');
     currentBoardUI = getBoardUIState();
-    updateBoardArrayTest();
-    // updateBoardArrays(box, value);  ---------
+    updateBoardArray();
   } else {
     // All boxes are filled and no valid tile combinations left
     gameOver();
   }
 }
 
+// Sets random value for new tile (2 or 4)
+function getValue() {
+	const nums = [2, 4];
+	return nums[Math.round(Math.random() * 1)];
+}
 
+// Randomly selects location of new tile from empty grid-boxes
+function selectRandomBox() {
+  // Get all unoccupied boxes
+  const unoccupiedBoxes = document.querySelectorAll('[data-occupied="false"]');
+  const numBoxes = unoccupiedBoxes.length;
+  if (!numBoxes)
+    // Game Over
+    return;
+  // Return a random unoccupied box
+  return unoccupiedBoxes[Math.floor(Math.random() * numBoxes)];
+}
+
+
+// ----------- Display Tiles -----------------------------
 // Displays tile value and unique bg color for each value
 function occupyBox(boxElement, boxValue) {
   const valueBox = boxElement.children[0];
@@ -54,29 +72,6 @@ function occupyBox(boxElement, boxValue) {
   boxElement.setAttribute("data-occupied", "true")
 }
 
-function gameOver() {
-  console.log('Game Over :(');
-}
-
-// Clears UI and then refills all occupied tiles (values !== 0)
-function updateGameBoard() {
-  clearGameBoard();
-  fillOccupiedTiles();
-}
-
-/// Testing
-function undoMove() {
-  clearGameBoard();
-  for (const tile of previousBoardUI) {
-    if(tile.value > 0) {
-      occupyBoxTest(tile.gridPos, tile.value);
-    }
-  }
-  currentBoardUI = getBoardUIState();
-  updateBoardArrayTest();
-  updateScoreBoard('undo');
-}
-
 /// Testing
 function occupyBoxTest(gridPos, tileValue) {
   const rowBox = document.querySelector(`[data-grid = ${gridPos}]`);
@@ -85,25 +80,18 @@ function occupyBoxTest(gridPos, tileValue) {
   rowBox.children[0].classList.add('occupied', `bg-${tileValue}`);
 }
 
-/// Testing
-function getBoardUIState() {
-  const boardState = [];
-  const allRowBoxes = document.querySelectorAll('.row-box');
-  for (const rowBox of allRowBoxes) {
-    const boxValue = rowBox.children[0].textContent;
-    const rowBoxState = {
-      gridPos: rowBox.getAttribute('data-grid'),
-      value: !boxValue ? 0 : boxValue
+// Puts tiles in corresponding UI grid positions
+function fillOccupiedTiles() {
+  // Loops through currentBoard array
+  for (let y=0; y<4; y++) {
+    for(let x=0; x<4; x++) {
+      // Creates tile in grid-box if value exists, or leaves empty
+      const boxValue = currentBoard[y][x];
+      if(boxValue > 0) {
+        const box = document.querySelector(`[data-grid = 'x${x}-y${y}']`);
+        occupyBox(box, boxValue);
+      }
     }
-    boardState.push(rowBoxState); 
-  }
-  return boardState;
-}
-
-//// Testing
-function updateBoardArrayTest () {
-  for (const rowBox of currentBoardUI) {
-    currentBoard[rowBox.gridPos[4]][rowBox.gridPos[1]] = rowBox.value;
   }
 }
 
@@ -124,18 +112,32 @@ function clearGameBoard() {
   }
 }
 
-// Puts tiles in corresponding UI grid positions
-function fillOccupiedTiles() {
-  // Loops through currentBoard array
-  for (let y=0; y<4; y++) {
-    for(let x=0; x<4; x++) {
-      // Creates tile in grid-box if value exists, or leaves empty
-      const boxValue = currentBoard[y][x];
-      if(boxValue > 0) {
-        const box = document.querySelector(`[data-grid = 'x${x}-y${y}']`);
-        occupyBox(box, boxValue);
-      }
+// Clears UI and then refills all occupied tiles (values !== 0)
+function updateGameBoard() {
+  clearGameBoard();
+  fillOccupiedTiles();
+}
+
+// --------------- Game State ----------------
+// Get grid positions and values of all row-box elements
+function getBoardUIState() {
+  const boardState = [];
+  const allRowBoxes = document.querySelectorAll('.row-box');
+  for (const rowBox of allRowBoxes) {
+    const boxValue = rowBox.children[0].textContent;
+    const rowBoxState = {
+      gridPos: rowBox.getAttribute('data-grid'),
+      value: !boxValue ? 0 : boxValue
     }
+    boardState.push(rowBoxState); 
+  }
+  return boardState;
+}
+
+// Update currentBoard array to match currentBoardUI
+function updateBoardArray () {
+  for (const rowBox of currentBoardUI) {
+    currentBoard[rowBox.gridPos[4]][rowBox.gridPos[1]] = rowBox.value;
   }
 }
 
@@ -149,6 +151,23 @@ function updateScoreBoard(undo=false){
   }
   turnScore = 0;
   document.querySelector('#currentScore').textContent = currentScore;
+}
+
+function gameOver() {
+  console.log('Game Over :(');
+}
+
+// Undo previous move only
+function undoMove() {
+  clearGameBoard();
+  for (const tile of previousBoardUI) {
+    if(tile.value > 0) {
+      occupyBoxTest(tile.gridPos, tile.value);
+    }
+  }
+  currentBoardUI = getBoardUIState();
+  updateBoardArray();
+  updateScoreBoard('undo');
 }
 
 // ========== Movement =====================
@@ -169,7 +188,6 @@ function moveTiles(direction) {
   updateGameBoard();
   updateScoreBoard();
   generateRandomTile();
-  console.log();
 }
 
 // Tiles vorizontal movement
@@ -252,15 +270,6 @@ function combineLikeValues(tilesArr, direction) {
 
 // ============ Utilities ==============
 
-// Updates previousBoard for 'undo' purposes and updates currentBoard with new random tile value
-function updateBoardArrays (boxElement, boxValue) {
-  const coords = boxElement.getAttribute("data-grid");
-  // Copy currentBoard prior to new tile
-  previousBoard = currentBoard.map(row => (row.slice()));
-  // Update currentBoard to include new random tile position and value
-  currentBoard[coords[4]][coords[1]] = boxValue;
-}
-
 // Checks if move changes board to determine if move is valid or not
 function boardChanged(board1,board2) {
   for (let y=0, length = board1.length; y<length; y++) {
@@ -271,22 +280,3 @@ function boardChanged(board1,board2) {
   }
   return false;
 }
-
-// Sets random value for new tile (2 or 4)
-function getValue() {
-	const nums = [2, 4];
-	return nums[Math.round(Math.random() * 1)];
-}
-
-// Randomly selects location of new tile from empty grid-boxes
-function selectRandomBox() {
-  // Get all unoccupied boxes
-  const unoccupiedBoxes = document.querySelectorAll('[data-occupied="false"]');
-  const numBoxes = unoccupiedBoxes.length;
-  if (!numBoxes)
-    // Game Over
-    return;
-  // Return a random unoccupied box
-  return unoccupiedBoxes[Math.floor(Math.random() * numBoxes)];
-}
-

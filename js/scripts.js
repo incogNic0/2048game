@@ -56,13 +56,10 @@ scoreboardBtns.addEventListener('click', e => {
     clearGameBoard();
     generateRandomTile();
   } else if (e.target.id = 'undo' || e.target.parentElement.id === 'undo'  ) {
-    undoPreviousMove();
+    undoMove();
   }
 });
 
-function undoPreviousMove() {
-  undoMove();
-}
 
 // Handle the start of gestures
 function handleSwipeStart(evt) {

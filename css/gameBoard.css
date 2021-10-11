@@ -34,12 +34,8 @@
   align-items: center;
   opacity: 0;
   font-size: 3.2rem;
-  transform: scale(0);
 }
 
-/* .value {
-  font-size: 3rem;
-} */
 .value-three-digit {
   font-size: 3rem;
 }
@@ -48,10 +44,8 @@
 }
 
 .occupied {
-  animation: popIn .3s;
+  animation: popIn .5s;
   opacity: 1;
-  transform: scale(1);
-  transition: .3s;
 }
 
 
@@ -97,6 +91,7 @@
 
 @keyframes popIn {
   0% {
+
     transform: scale(0);
   }
 

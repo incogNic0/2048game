@@ -61,7 +61,7 @@ scoreboardBtns.addEventListener('click', e => {
 });
 
 function undoPreviousMove() {
-  console.log('Currently under development... :)');
+  undoMove();
 }
 
 // Handle the start of gestures

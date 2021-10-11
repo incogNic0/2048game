@@ -1,5 +1,7 @@
 // 'Occupied' tile === value > 0
 // 'Unoccupied' tile === value=0
+let currentBoardUI = null;
+let previousBoardUI = null;
 
 let currentBoard = [
   [0,0,0,0],
@@ -7,7 +9,7 @@ let currentBoard = [
   [0,0,0,0],
   [0,0,0,0]
 ]
-let previousBoard = [];
+// let previousBoard = [];
 
 // Score prior to most recent move.  Allows 'undo' of most recent move only
 let previouScore = 0;
@@ -26,7 +28,10 @@ function generateRandomTile() {
     // Update UI
     occupyBox(box,value);
     // Update currentBoard and previousBoard values
-    updateBoardArrays(box, value);
+    // testCurrent = document.querySelectorAll('.occupied');
+    currentBoardUI = getBoardUIState();
+    updateBoardArrayTest();
+    // updateBoardArrays(box, value);  ---------
   } else {
     // All boxes are filled and no valid tile combinations left
     gameOver();
@@ -57,6 +62,49 @@ function gameOver() {
 function updateGameBoard() {
   clearGameBoard();
   fillOccupiedTiles();
+}
+
+/// Testing
+function undoMove() {
+  clearGameBoard();
+  for (const tile of previousBoardUI) {
+    if(tile.value > 0) {
+      occupyBoxTest(tile.gridPos, tile.value);
+    }
+  }
+  currentBoardUI = getBoardUIState();
+  updateBoardArrayTest();
+  updateScoreBoard('undo');
+}
+
+/// Testing
+function occupyBoxTest(gridPos, tileValue) {
+  const rowBox = document.querySelector(`[data-grid = ${gridPos}]`);
+  rowBox.setAttribute('data-occupied', 'true');
+  rowBox.children[0].textContent = tileValue;
+  rowBox.children[0].classList.add('occupied', `bg-${tileValue}`);
+}
+
+/// Testing
+function getBoardUIState() {
+  const boardState = [];
+  const allRowBoxes = document.querySelectorAll('.row-box');
+  for (const rowBox of allRowBoxes) {
+    const boxValue = rowBox.children[0].textContent;
+    const rowBoxState = {
+      gridPos: rowBox.getAttribute('data-grid'),
+      value: !boxValue ? 0 : boxValue
+    }
+    boardState.push(rowBoxState); 
+  }
+  return boardState;
+}
+
+//// Testing
+function updateBoardArrayTest () {
+  for (const rowBox of currentBoardUI) {
+    currentBoard[rowBox.gridPos[4]][rowBox.gridPos[1]] = rowBox.value;
+  }
 }
 
 // Clears and resets all UI tiles
@@ -92,17 +140,22 @@ function fillOccupiedTiles() {
 }
 
 // Update scoreboard UI
-function updateScoreBoard(){
-  previouScore = currentScore;
-  currentScore = previouScore + turnScore;
-  document.querySelector('#currentScore').textContent = currentScore;
+function updateScoreBoard(undo=false){
+  if(undo === 'undo' || undo === true) {
+    currentScore = previouScore;
+  } else {
+    previouScore = currentScore;
+    currentScore = previouScore + turnScore;
+  }
   turnScore = 0;
+  document.querySelector('#currentScore').textContent = currentScore;
 }
 
 // ========== Movement =====================
 function moveTiles(direction) {
   // copy currentBoard to see if there's any change after move
   // if there's no changes move is not allowed
+  previousBoardUI = getBoardUIState();
   const tempCurrent = currentBoard.map(row => (row.slice()));
   if (direction === 'up' || direction === 'down') {
     moveTilesVertically(direction)
@@ -115,7 +168,8 @@ function moveTiles(direction) {
   }
   updateGameBoard();
   updateScoreBoard();
-  generateRandomTile(); 
+  generateRandomTile();
+  console.log();
 }
 
 // Tiles vorizontal movement

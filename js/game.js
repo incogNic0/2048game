@@ -124,11 +124,14 @@ function getBoardUIState() {
   const boardState = [];
   const allRowBoxes = document.querySelectorAll('.row-box');
   for (const rowBox of allRowBoxes) {
-    const boxValue = rowBox.children[0].textContent;
+    const boxValue = Number(rowBox.children[0].textContent);
     const rowBoxState = {
       gridPos: rowBox.getAttribute('data-grid'),
-      value: !boxValue ? 0 : boxValue
+      value: !boxValue ? 0 : boxValue,
+      isOccupied: function() { return this.value > 0},
+      alreadyUpdated: false
     }
+
     boardState.push(rowBoxState); 
   }
   return boardState;
@@ -178,17 +181,55 @@ function moveTiles(direction) {
   const tempCurrent = currentBoard.map(row => (row.slice()));
   if (direction === 'up' || direction === 'down') {
     moveTilesVertically(direction)
-    if(!boardChanged(tempCurrent,currentBoard))
-      return;
   } else {
     moveTilesHorizontally(direction);
-    if(!boardChanged(tempCurrent,currentBoard))
-      return;
   }
+  if(!boardChanged(tempCurrent,currentBoard)) return;
   updateGameBoard();
   updateScoreBoard();
   generateRandomTile();
 }
+
+//// Testing
+function moveTilesHorizontallyTest(direction) {
+ const moveTilesDirection = direction === 'left' ? moveTilesLeft : moveTilesRight;
+  // Set starting position
+  moveTilesDirection();
+}
+/// Testing
+function moveTilesTest() {
+  for (let y=0; y<4; y++) {
+    arrangeRowTest(currentBoard[y]);
+  }
+}
+/// Testing
+function arrangeRowTest(row, direction) {
+  const rowTest = direction === 'right'? sortBoxesTest(row).reverse() : sortBoxesTest(row);
+  console.log(rowTest);
+}
+//// Testing
+function sortBoxesTest(row, index=0) {
+  // Find first occupied box index (not including current index)
+  const nextOccupiedIndex = row.slice(index+1).findIndex(elem => elem > 0);
+  if(nextOccupiedIndex === -1) return row;// end of row or all boxes are unoccupied
+  // Case: box is unoccupied
+  if(row[index] === 0) {
+    // Move first occupied box to current index;
+    row[index] = row[nextOccupiedIndex+index+1];
+    row[nextOccupiedIndex+index+1] = 0; // tile has been moved. set box to unoccupied
+    // rerun at current index in case a matching adjacent tile remains
+    return sortBoxesTest(row,index);
+
+  // Case: box is occupied and next tile with a value matches
+  }else if(row[index] > 0 && row[nextOccupiedIndex+index+1] === row[index]) {
+    // Tiles combine doubling value at current index
+    row[index] = row[index] * 2;
+    row[nextOccupiedIndex+index+1] = 0; // tile has been moved. set box to unoccupied
+  }
+  // Sort the nex box index
+  return sortBoxesTest(row, index+1);
+}
+
 
 // Tiles vorizontal movement
 function moveTilesHorizontally(direction) {

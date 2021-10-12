@@ -190,51 +190,41 @@ function moveTiles(direction) {
   generateRandomTile();
 }
 
-//// Testing
-function moveTilesHorizontallyTest(direction) {
- const moveTilesDirection = direction === 'left' ? moveTilesLeft : moveTilesRight;
-  // Set starting position
-  moveTilesDirection();
+// Manages the correct order for rows to be sorted and returned
+function arrangeRow(rowArr, direction) {
+  //'right' row needs to be reversed to sort and combine values correctly
+  const row = direction === 'right' ? rowArr.reverse() : rowArr;
+  // Reverse 'right' row back to original order and return sorted row
+  return direction === 'right' ? sortBoxes(row).reverse() : sortBoxes(row);
 }
-/// Testing
-function moveTilesTest() {
-  for (let y=0; y<4; y++) {
-    arrangeRowTest(currentBoard[y]);
-  }
-}
-/// Testing
-function arrangeRowTest(row, direction) {
-  const rowTest = direction === 'right'? sortBoxesTest(row).reverse() : sortBoxesTest(row);
-  console.log(rowTest);
-}
-//// Testing
-function sortBoxesTest(row, index=0) {
+
+// Sorts and combines specific matching tiles in a row
+function sortBoxes(row, index=0) {
   // Find first occupied box index (not including current index)
   const nextOccupiedIndex = row.slice(index+1).findIndex(elem => elem > 0);
-  if(nextOccupiedIndex === -1) return row;// end of row or all boxes are unoccupied
-  // Case: box is unoccupied
+  // Case: end of row or all boxes are unoccupied
+  if(nextOccupiedIndex === -1) return row; // End and return sorted row
+  // Case: current box is unoccupied
   if(row[index] === 0) {
-    // Move first occupied box to current index;
+    // Move first occupied box to current box index;
     row[index] = row[nextOccupiedIndex+index+1];
     row[nextOccupiedIndex+index+1] = 0; // tile has been moved. set box to unoccupied
     // rerun at current index in case a matching adjacent tile remains
-    return sortBoxesTest(row,index);
-
-  // Case: box is occupied and next tile with a value matches
+    return sortBoxes(row,index);
+  // Case: current box is occupied and next occupied box's value matches
   }else if(row[index] > 0 && row[nextOccupiedIndex+index+1] === row[index]) {
-    // Tiles combine doubling value at current index
-    row[index] = row[index] * 2;
+    row[index] = row[index] * 2;  // Tiles combine doubling value of current box
     row[nextOccupiedIndex+index+1] = 0; // tile has been moved. set box to unoccupied
   }
-  // Sort the nex box index
-  return sortBoxesTest(row, index+1);
+  return sortBoxes(row, index+1); // move on to next box
 }
 
 
 // Tiles vorizontal movement
 function moveTilesHorizontally(direction) {
-  currentBoard.map((row, i) => {
-    currentBoard[i] = arrangeTiles(row,direction);
+  currentBoard.map((row, y) => {
+    // Arrage row and update currentBoard
+    currentBoard[y] = arrangeRow(row,direction);
   });
 }
 
@@ -247,67 +237,13 @@ function moveTilesVertically(direction) {
     // Create an array of the values from each row of the column
     const column = currentBoard.map((row => (row[x])));
     // Sort and combine same adjacent values based on direction
-    const sortedColumn = arrangeTiles(column, dir);
+    const sortedColumn = arrangeRow(column, dir);
     // Update each currentBoard Column
     currentBoard.map((row, index) => {
       return row[x] = sortedColumn[index];
     });
   }
 }
-
-// Sort and combine adjacent like valued tiles based on direction
-function arrangeTiles(tilesArr, direction) {
-  const sortedTiles = sortTiles(tilesArr, direction);
-  return combineLikeValues(sortedTiles, direction);
-}
-
-// Sort tiles prior to combining
-function sortTiles(tilesArr,direction) {
-  const tilesCopy = direction === 'left' ? tilesArr.slice().reverse() : tilesArr.slice();
-  const sortedTiles = [];
-  for (const value of tilesCopy) {
-    if(value === 0) {
-      sortedTiles.push(0);
-    } else {
-      sortedTiles.unshift(value);
-    }
-  }
-  /* 
-  Sorts occupied boxes to the begining (keeping order), and all unoccupied after
-  ie. [0,4,0,32] --> 'left':[4,32,0,0] - 'right':[32,4,0,0]**
-    **'right' is reversed to use same combining function 
-  */
-  return sortedTiles;
-}
-
-// Combine adjacent tiles based on same values and directional input
-function combineLikeValues(tilesArr, direction) {
-  /* 
-  For 'right' combine with left adajcent of same value**
-  For 'left' combine with right adajcent of same value
-  Values can only be combined once per move.
-  ie. [4,0,4,8] --> 'left': [8,8,0,0] right: [0,0,8,8]
-      [4,4,4,0] --> 'left': [8,4,0,0] right: [0,0,4,8] 
-  */
-  const tilesCopy = tilesArr.slice();
-  let length = tilesCopy.length-1;
-  for(let i=0; i<length; i++) {
-    // If tile value === adjacent tile value, combine tiles and values
-    if(tilesCopy[i] === tilesCopy[i+1]) {
-      // track total turn score
-      turnScore += Number(tilesCopy[i]) * 2
-      // keep one tile and double it's value
-      tilesCopy[i+1] = tilesCopy[i+1] * 2;
-      // remove a tile
-      tilesCopy.splice(i, 1);
-      // Add unoccupied value for removed tile
-      tilesCopy.push(0);
-    }
-  }
-  // **'right' was inputed reversed and is returned to its correct order
-  return direction === 'right' ? tilesCopy.reverse() : tilesCopy;
-}
-
 
 // ============ Utilities ==============
 

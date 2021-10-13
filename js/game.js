@@ -30,7 +30,7 @@ function generateRandomTile() {
     occupyBox(box,value);
     // Update currentBoard and previousBoard values
     currentBoardUI = getBoardUIState();
-    updateBoardArray();
+    updateCurrentBoardArray()
   } else {
     // All boxes are filled and no valid tile combinations left
     gameOver();
@@ -121,26 +121,22 @@ function updateGameBoard() {
 // --------------- Game State ----------------
 // Get grid positions and values of all row-box elements
 function getBoardUIState() {
-  const boardState = [];
+  const boardState = {};
   const allRowBoxes = document.querySelectorAll('.row-box');
   for (const rowBox of allRowBoxes) {
-    const boxValue = Number(rowBox.children[0].textContent);
-    const rowBoxState = {
-      gridPos: rowBox.getAttribute('data-grid'),
-      value: !boxValue ? 0 : boxValue,
-      isOccupied: function() { return this.value > 0},
-      alreadyUpdated: false
+    const gridPos = rowBox.getAttribute('data-grid');
+    const value = Number(rowBox.children[0].textContent);
+    boardState[gridPos] = {
+      value,
+      isOccupied: function() {return this.value > 0}
     }
-
-    boardState.push(rowBoxState); 
   }
   return boardState;
 }
 
-// Update currentBoard array to match currentBoardUI
-function updateBoardArray () {
-  for (const rowBox of currentBoardUI) {
-    currentBoard[rowBox.gridPos[4]][rowBox.gridPos[1]] = rowBox.value;
+function updateCurrentBoardArray() {
+  for (const gridPos in currentBoardUI) {
+    currentBoard[gridPos[4]][gridPos[1]] = currentBoardUI[gridPos].value;
   }
 }
 
@@ -163,13 +159,13 @@ function gameOver() {
 // Undo previous move only
 function undoMove() {
   clearGameBoard();
-  for (const tile of previousBoardUI) {
-    if(tile.value > 0) {
-      occupyBoxTest(tile.gridPos, tile.value);
+  for (const gridPos in previousBoardUI) {
+    if(previousBoardUI[gridPos].value > 0) {
+      occupyBoxTest(gridPos, previousBoardUI[gridPos].value);
     }
   }
-  currentBoardUI = getBoardUIState();
-  updateBoardArray();
+  currentBoardUI = getBoardUIState()
+  updateCurrentBoardArray()
   updateScoreBoard('undo');
 }
 
@@ -178,13 +174,12 @@ function moveTiles(direction) {
   // copy currentBoard to see if there's any change after move
   // if there's no changes move is not allowed
   previousBoardUI = getBoardUIState();
-  const tempCurrent = currentBoard.map(row => (row.slice()));
   if (direction === 'up' || direction === 'down') {
     moveTilesVertically(direction)
   } else {
     moveTilesHorizontally(direction);
   }
-  if(!boardChanged(tempCurrent,currentBoard)) return;
+  if(!boardChanged()) return;
   updateGameBoard();
   updateScoreBoard();
   generateRandomTile();
@@ -248,11 +243,12 @@ function moveTilesVertically(direction) {
 // ============ Utilities ==============
 
 // Checks if move changes board to determine if move is valid or not
-function boardChanged(board1,board2) {
-  for (let y=0, length = board1.length; y<length; y++) {
-    for(let x=0, length = board1[y].length; x< length; x++) {
-      if (board1[y][x] !== board2[y][x])
+function boardChanged() {
+  for (let y=0, len = currentBoard.length; y<len; y++) {
+    for(let x=0, len = currentBoard[y].length; x<len; x++) {
+      if (currentBoard[y][x] !== previousBoardUI[`x${x}-y${y}`].value){
         return true;
+      }
     }
   }
   return false;

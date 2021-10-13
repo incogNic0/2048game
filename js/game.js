@@ -16,6 +16,7 @@ let previouScore = 0;
 let turnScore = 0;
 // Score after move
 let currentScore = 0;
+let bestScore = 0
 
 //============ UI ==================
 
@@ -57,18 +58,6 @@ function selectRandomBox() {
 
 
 // ----------- Display Tiles -----------------------------
-// Displays tile value and unique bg color for each value
-// function occupyBox(boxElement, boxValue) {
-//   const valueBox = boxElement.children[0];
-//   // const valueText = boxElement.querySelector('.value');
-//   valueBox.textContent = boxValue
-
-//   // Set unique bg color depending on tile value
-//   valueBox.classList.add('occupied', `bg-${boxValue}`);
-//   boxElement.setAttribute("data-occupied", "true")
-// }
-
-/// Testing
 function occupyBox(gridPos, tileValue) {
   const rowBox = document.querySelector(`[data-grid = ${gridPos}]`);
   const valueBox = rowBox.children[0];
@@ -149,7 +138,11 @@ function updateScoreBoard(undo=false){
     currentScore = previouScore + turnScore;
   }
   turnScore = 0;
-  document.querySelector('#currentScore').textContent = currentScore;
+  document.querySelector('#current-score').textContent = currentScore;
+  if(currentScore > bestScore) {
+    bestScore = currentScore;
+    document.querySelector('#best-score').textContent = bestScore;
+  }
 }
 
 function gameOver() {
@@ -161,7 +154,7 @@ function undoMove() {
   clearGameBoard();
   for (const gridPos in previousBoardUI) {
     if(previousBoardUI[gridPos].value > 0) {
-      occupyBoxTest(gridPos, previousBoardUI[gridPos].value);
+      occupyBox(gridPos, previousBoardUI[gridPos].value);
     }
   }
   currentBoardUI = getBoardUIState()
@@ -171,15 +164,15 @@ function undoMove() {
 
 // ========== Movement =====================
 function moveTiles(direction) {
-  // copy currentBoard to see if there's any change after move
-  // if there's no changes move is not allowed
+  // Get board state prior to move to ensure it changes afterwards
   previousBoardUI = getBoardUIState();
   if (direction === 'up' || direction === 'down') {
     moveTilesVertically(direction)
   } else {
     moveTilesHorizontally(direction);
   }
-  if(!boardChanged()) return;
+  // If no tiles h change positions do nothing
+  if(!boardChanged()) return; // do nothing if move won't change board
   updateGameBoard();
   updateScoreBoard();
   generateRandomTile();
@@ -210,6 +203,7 @@ function sortBoxes(row, index=0) {
   }else if(row[index] > 0 && row[nextOccupiedIndex+index+1] === row[index]) {
     row[index] = row[index] * 2;  // Tiles combine doubling value of current box
     row[nextOccupiedIndex+index+1] = 0; // tile has been moved. set box to unoccupied
+    turnScore += row[index];
   }
   return sortBoxes(row, index+1); // move on to next box
 }

@@ -53,6 +53,7 @@ scoreboardBtns.addEventListener('click', e => {
     previousBoard = [];
     previouScore = 0;
     currentScore = 0;
+    updateScoreBoard();
     clearGameBoard();
     generateRandomTile();
   } else if (e.target.id = 'undo' || e.target.parentElement.id === 'undo'  ) {

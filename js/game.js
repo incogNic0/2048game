@@ -1,40 +1,32 @@
-// 'Occupied' tile === value > 0
-// 'Unoccupied' tile === value=0
 let currentBoardUI = null;
 let previousBoardUI = null;
 
 let currentBoard = [
+  [0,0,0,0],  // 'Occupied' === value > 0
   [0,0,0,0],
-  [0,0,0,0],
-  [0,0,0,0],
+  [0,0,0,0],  // 'Unoccupied' === value = 0
   [0,0,0,0]
 ]
 
-// Score prior to most recent move.  Allows 'undo' of most recent move only
-let previouScore = 0;
-//  Add to previous score for new current. Needed for 'undo' functionality
-let turnScore = 0;
-// Score after move
-let currentScore = 0;
-let bestScore = 0
+let previouScore = 0; // total game score prior to move 
+let turnScore = 0; // points accrued from recent move   
+let currentScore = 0; // total current game score
+let bestScore = 0 // best score from all games -- not persistent yet --
 
 //============ UI ==================
 
 // ------------ New Box ---------------
 function generateRandomTile() {
-  // Generate random value (2 or 4) for new box
-	const value = getValue();
+	const value = getValue(); // returns random value of 2 or 4
   // Select random unoccupied box for new tile location
-	const boxGridPos = selectRandomBox();
+	const boxGridPos = selectRandomBox(); // returns `x${xPos}-y${yPos}`
   if(boxGridPos) {
-    // Update UI
-    occupyBox(boxGridPos, value);
-    // Update currentBoard and previousBoard values
-    currentBoardUI = getBoardUIState();
-    updateCurrentBoardArray()
+    occupyBox(boxGridPos, value); // Update UI to display new tile
+    // Update currentBoard array with new value at index of tile's UI grid position
+    currentBoard[boxGridPos[4]][boxGridPos[1]] = value;
   } else {
     // All boxes are filled and no valid tile combinations left
-    gameOver();
+    gameOver(); // -- currently never runs ---
   }
 }
 
@@ -49,9 +41,7 @@ function selectRandomBox() {
   // Get all unoccupied boxes
   const unoccupiedBoxes = document.querySelectorAll('[data-occupied="false"]');
   const numBoxes = unoccupiedBoxes.length;
-  if (!numBoxes)
-    // Game Over
-    return;
+  if (!numBoxes) return; // Game over
   // Return random unoccupied box grid posistion
   return unoccupiedBoxes[Math.floor(Math.random() * numBoxes)].getAttribute('data-grid');
 }
@@ -60,15 +50,18 @@ function selectRandomBox() {
 // ----------- Display Tiles -----------------------------
 function occupyBox(gridPos, tileValue) {
   const rowBox = document.querySelector(`[data-grid = ${gridPos}]`);
-  const valueBox = rowBox.children[0];
-  // Use smaller fonts for larger values
-  if(tileValue > 999)
-    valueBox.classList.add('value-four-digit');
-  if(tileValue > 99)
-    valueBox.classList.add('value-three-digit');
+  updateValueBox(rowBox.children[0], tileValue);
   rowBox.setAttribute('data-occupied', 'true');
-  valueBox.textContent = tileValue;
-  valueBox.classList.add('occupied', `bg-${tileValue}`);
+}
+
+function updateValueBox(valueBoxElement, value) {
+  if(value > 999) {
+    valueBoxElement.classList.add('value-four-digit')
+  } else if(value > 99) {
+    valueBoxElement.classList.add('value-three-digit');
+  }
+  valueBoxElement.textContent = value;
+  valueBoxElement.classList.add('occupied', `bg-${value}`);
 }
 
 // Puts tiles in corresponding UI grid positions
@@ -123,12 +116,6 @@ function getBoardUIState() {
   return boardState;
 }
 
-function updateCurrentBoardArray() {
-  for (const gridPos in currentBoardUI) {
-    currentBoard[gridPos[4]][gridPos[1]] = currentBoardUI[gridPos].value;
-  }
-}
-
 // Update scoreboard UI
 function updateScoreBoard(undo=false){
   if(undo === 'undo' || undo === true) {
@@ -158,7 +145,9 @@ function undoMove() {
     }
   }
   currentBoardUI = getBoardUIState()
-  updateCurrentBoardArray()
+  for (const gridPos in currentBoardUI) {
+    currentBoard[gridPos[4]][gridPos[1]] = currentBoardUI[gridPos].value;
+  }
   updateScoreBoard('undo');
 }
 

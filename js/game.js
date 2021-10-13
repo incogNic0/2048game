@@ -23,11 +23,11 @@ let currentScore = 0;
 function generateRandomTile() {
   // Generate random value (2 or 4) for new box
 	const value = getValue();
-  // Select random box for new tile location
-	const box = selectRandomBox();
-  if(box) {
+  // Select random unoccupied box for new tile location
+	const boxGridPos = selectRandomBox();
+  if(boxGridPos) {
     // Update UI
-    occupyBox(box,value);
+    occupyBox(boxGridPos, value);
     // Update currentBoard and previousBoard values
     currentBoardUI = getBoardUIState();
     updateCurrentBoardArray()
@@ -51,33 +51,35 @@ function selectRandomBox() {
   if (!numBoxes)
     // Game Over
     return;
-  // Return a random unoccupied box
-  return unoccupiedBoxes[Math.floor(Math.random() * numBoxes)];
+  // Return random unoccupied box grid posistion
+  return unoccupiedBoxes[Math.floor(Math.random() * numBoxes)].getAttribute('data-grid');
 }
 
 
 // ----------- Display Tiles -----------------------------
 // Displays tile value and unique bg color for each value
-function occupyBox(boxElement, boxValue) {
-  const valueBox = boxElement.children[0];
-  // const valueText = boxElement.querySelector('.value');
-  valueBox.textContent = boxValue
-  // Use smaller fonts for larger values
-  if(boxValue > 999)
-    valueBox.classList.add('value-four-digit');
-  if(boxValue > 99)
-    valueBox.classList.add('value-three-digit');
-  // Set unique bg color depending on tile value
-  valueBox.classList.add('occupied', `bg-${boxValue}`);
-  boxElement.setAttribute("data-occupied", "true")
-}
+// function occupyBox(boxElement, boxValue) {
+//   const valueBox = boxElement.children[0];
+//   // const valueText = boxElement.querySelector('.value');
+//   valueBox.textContent = boxValue
+
+//   // Set unique bg color depending on tile value
+//   valueBox.classList.add('occupied', `bg-${boxValue}`);
+//   boxElement.setAttribute("data-occupied", "true")
+// }
 
 /// Testing
-function occupyBoxTest(gridPos, tileValue) {
+function occupyBox(gridPos, tileValue) {
   const rowBox = document.querySelector(`[data-grid = ${gridPos}]`);
+  const valueBox = rowBox.children[0];
+  // Use smaller fonts for larger values
+  if(tileValue > 999)
+    valueBox.classList.add('value-four-digit');
+  if(tileValue > 99)
+    valueBox.classList.add('value-three-digit');
   rowBox.setAttribute('data-occupied', 'true');
-  rowBox.children[0].textContent = tileValue;
-  rowBox.children[0].classList.add('occupied', `bg-${tileValue}`);
+  valueBox.textContent = tileValue;
+  valueBox.classList.add('occupied', `bg-${tileValue}`);
 }
 
 // Puts tiles in corresponding UI grid positions
@@ -85,11 +87,9 @@ function fillOccupiedTiles() {
   // Loops through currentBoard array
   for (let y=0; y<4; y++) {
     for(let x=0; x<4; x++) {
-      // Creates tile in grid-box if value exists, or leaves empty
-      const boxValue = currentBoard[y][x];
-      if(boxValue > 0) {
-        const box = document.querySelector(`[data-grid = 'x${x}-y${y}']`);
-        occupyBox(box, boxValue);
+      // Create tile in grid-box if value exists, or leave empty
+      if(currentBoard[y][x] > 0) {
+        occupyBox(`x${x}-y${y}`, currentBoard[y][x])
       }
     }
   }

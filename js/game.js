@@ -84,7 +84,6 @@ function clearGameBoard() {
   // Resets each occupied box
   for(const box of occupiedBoxes) {
     const valueBox = box.children[0]
-    // valueDisplay.classList.add('slide-right');
     // Remove 'occupy' and 'bg-###' classes
     valueBox.classList = 'value-box';
     // Remove Value from box
@@ -164,19 +163,85 @@ function moveTiles(direction) {
   if(!boardChanged()) return; // do nothing if move won't change board
   updateGameBoard();
   updateScoreBoard();
+  // setTimeout(generateRandomTile, 500);
   generateRandomTile();
 }
 
+// // Tiles horizontal movement
+// function moveTilesHorizontally(direction) {
+//   currentBoard.map((row, y) => {
+//     // Arrage row and update currentBoard
+//     currentBoard[y] = arrangeTiles(row,direction);
+//   });
+// }
+
+// // Manages the correct order for rows to be sorted and returned
+// function arrangeTiles(rowArr, direction) {
+//   //'right' row needs to be reversed to sort and combine values correctly
+//   if(direction === 'right' || direction === 'down') {
+//     // Reverse 'right' row back to original order and return sorted row
+//     return sortRow(rowArr.reverse()).reverse();
+//   }
+//   return sortRow(rowArr);
+// }
+
+// // Sorts and combines specific matching tiles in a row
+// function sortRow(row, index=0) {
+//   // Find first occupied box index (not including current index)
+//   const nextOccupiedIndex = row.slice(index+1).findIndex(elem => elem > 0);
+//   // Case: end of row or all boxes are unoccupied
+//   if(nextOccupiedIndex === -1) return row; // End and return sorted row
+//   // Case: current box is unoccupied
+//   if(row[index] === 0) {
+//     // Move first occupied box to current box index;
+//     row[index] = row[nextOccupiedIndex+index+1];
+//     row[nextOccupiedIndex+index+1] = 0; // tile has been moved. set box to unoccupied
+//     // rerun at current index in case a matching adjacent tile remains
+//     return sortRow(row,index);
+//   // Case: current box is occupied and next occupied box's value matches
+//   }else if(row[index] > 0 && row[nextOccupiedIndex+index+1] === row[index]) {
+//     row[index] = row[index] * 2;  // Tiles combine doubling value of current box
+//     row[nextOccupiedIndex+index+1] = 0; // tile has been moved. set box to unoccupied
+//     turnScore += row[index];
+//   }
+//   return sortRow(row, index+1); // move on to next box
+// }
+
+// // Tiles vertical movement
+// function moveTilesVertically(direction) {
+//   const numColumns = currentBoard[0].length;
+//   // Loop through each column
+//   for (let x=0; x<numColumns; x++) {
+//     // Create an array of the values from each row of the column
+//     const column = currentBoard.map((row => (row[x])));
+//     // Sort and combine same adjacent values based on direction
+//     const sortedColumn = arrangeTiles(column, direction);
+//     // Update each currentBoard Column
+//     currentBoard.map((row, index) => {
+//       return row[x] = sortedColumn[index];
+//     });
+//   }
+// }
+// ------------TESTING--------------------
+function moveTilesHorizontally(direction) {
+  currentBoard.map((row, y) => {
+    // Arrage row and update currentBoard
+    currentBoard[y] = arrangeTiles(row, y, direction);
+  });
+}
+
 // Manages the correct order for rows to be sorted and returned
-function arrangeRow(rowArr, direction) {
+function arrangeTiles(rowArr, y, direction) {
   //'right' row needs to be reversed to sort and combine values correctly
-  const row = direction === 'right' ? rowArr.reverse() : rowArr;
-  // Reverse 'right' row back to original order and return sorted row
-  return direction === 'right' ? sortBoxes(row).reverse() : sortBoxes(row);
+  if(direction === 'right' || direction === 'down') {
+    // Reverse 'right' row back to original order and return sorted row
+    return sortRow(rowArr.reverse(),y).reverse();
+  }
+  return sortRow(rowArr,y);
 }
 
 // Sorts and combines specific matching tiles in a row
-function sortBoxes(row, index=0) {
+function sortRow(row,y, index=0) {
   // Find first occupied box index (not including current index)
   const nextOccupiedIndex = row.slice(index+1).findIndex(elem => elem > 0);
   // Case: end of row or all boxes are unoccupied
@@ -187,40 +252,51 @@ function sortBoxes(row, index=0) {
     row[index] = row[nextOccupiedIndex+index+1];
     row[nextOccupiedIndex+index+1] = 0; // tile has been moved. set box to unoccupied
     // rerun at current index in case a matching adjacent tile remains
-    return sortBoxes(row,index);
+    return sortRow(row,y, index);
   // Case: current box is occupied and next occupied box's value matches
   }else if(row[index] > 0 && row[nextOccupiedIndex+index+1] === row[index]) {
     row[index] = row[index] * 2;  // Tiles combine doubling value of current box
     row[nextOccupiedIndex+index+1] = 0; // tile has been moved. set box to unoccupied
     turnScore += row[index];
   }
-  return sortBoxes(row, index+1); // move on to next box
-}
-
-
-// Tiles vorizontal movement
-function moveTilesHorizontally(direction) {
-  currentBoard.map((row, y) => {
-    // Arrage row and update currentBoard
-    currentBoard[y] = arrangeRow(row,direction);
-  });
+  return sortRow(row, y, index+1); // move on to next box
 }
 
 // Tiles vertical movement
 function moveTilesVertically(direction) {
-  const dir = direction === 'up' ? 'left' : 'right';
-  const numColumns = currentBoard[0].length;
-  // Loop through each column
-  for (let x=0; x<numColumns; x++) {
-    // Create an array of the values from each row of the column
-    const column = currentBoard.map((row => (row[x])));
-    // Sort and combine same adjacent values based on direction
-    const sortedColumn = arrangeRow(column, dir);
-    // Update each currentBoard Column
-    currentBoard.map((row, index) => {
-      return row[x] = sortedColumn[index];
-    });
+  const numColumns = currentBoard.length;
+  const row = direction === 'down' ? 3 : 0;
+  for (let col=0; col<numColumns; col++) {
+    sortColumn(direction, col, row);
   }
+}
+
+function sortColumn(direction, colIndex=0, rowIndex=0) {
+  // Get index of first occupied box relative to current box (not inclusive)
+  const occupiedIndex = findFirstOccupiedBox(direction, colIndex, rowIndex); // returns -1 if none
+  // If no occupied boxes lest in current column move on to next column 
+  if(occupiedIndex < 0) return;
+  // Case: current box is unoccupied
+  if(currentBoard[rowIndex][colIndex] === 0) {
+    // Set value of current box to value of first occupied box
+    currentBoard[rowIndex][colIndex] = currentBoard[occupiedIndex][colIndex];
+    // Set previously occupied box to 0 (unoccupied)
+    currentBoard[occupiedIndex][colIndex] = 0;  
+    // Rerun at current position and check if next occupied box has matching value
+    return sortColumn(direction, colIndex, rowIndex);
+  }
+  // Case: current box is occupied and next box's value is the same
+  if(currentBoard[rowIndex][colIndex] === currentBoard[occupiedIndex][colIndex]) {
+    // Double current box's value
+    currentBoard[rowIndex][colIndex] *= 2
+    // Set next occupied box index to unoccupied
+    currentBoard[occupiedIndex][colIndex] = 0;
+    // Add points to turn score
+    turnScore += currentBoard[rowIndex][colIndex];
+    // Sort remaining rows of the column
+  }
+  if(direction === 'down') return sortColumn(direction, colIndex, rowIndex-1);
+  return sortColumn(direction, colIndex, rowIndex+1);
 }
 
 // ============ Utilities ==============
@@ -236,3 +312,36 @@ function boardChanged() {
   }
   return false;
 }
+
+
+function findFirstOccupiedBox(direction, colIndex, rowIndex) {
+  const directions = {
+    left: true,
+    right: true,
+    up: true,
+    down: true
+  }
+  // Throw error if invalid direction inputed
+  if(!directions[direction]) throw 'Not a valid direction'
+  // One index is constant thru loop
+  const lenBoard = currentBoard.length;
+  if(direction === 'left') {
+    for (let x = colIndex+1; x < lenBoard; x++ ) {
+      if(currentBoard[rowIndex][x] > 0) return x;
+    }
+  } else if(direction === 'right') {
+    for(let x = colIndex-1; x > -1; x--) {
+      if(currentBoard[rowIndex][x] > 0) return x;
+    }
+  } else if(direction === 'up') {
+    for(let y = rowIndex + 1; y < lenBoard; y++) {
+      if(currentBoard[y][colIndex] > 0) return y;
+    }
+  } else if(direction === 'down') {
+    for(let y = rowIndex-1; y > -1; y--) {
+      if(currentBoard[y][colIndex] > 0) return y;
+    }
+  }
+  return -1; // returns if no boxes with a value were found
+}
+

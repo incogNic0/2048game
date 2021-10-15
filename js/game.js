@@ -7,7 +7,7 @@ let currentBoard = [
   [0,0,0,0],  // 'Unoccupied' === value = 0
   [0,0,0,0]
 ]
-
+let tileMovements;
 let previouScore = 0; // total game score prior to move 
 let turnScore = 0; // points accrued from recent move   
 let currentScore = 0; // total current game score
@@ -152,6 +152,8 @@ function undoMove() {
 
 // ========== Movement =====================
 function moveTiles(direction) {
+  // Clear prior tile movements, and track new movements
+  tileMovements = [];
   // Get board state prior to move to ensure it changes afterwards
   previousBoardUI = getBoardUIState();
   if (direction === 'up' || direction === 'down') {
@@ -188,6 +190,10 @@ function sortRow(direction, colIndex=0, rowIndex=0) {
     currentBoard[rowIndex][colIndex] = currentBoard[rowIndex][occupiedIndex];
     // Set previously occupied box to unoccupied
     currentBoard[rowIndex][occupiedIndex] = 0;
+    // Record tile movement changes for animation
+    tileMovements.push(
+      trackTileMovement(direction, colIndex, rowIndex, occupiedIndex)
+    );
     // Rerun at current position and check if next tile value matches
     return sortRow(direction, colIndex, rowIndex);
   }
@@ -199,6 +205,10 @@ function sortRow(direction, colIndex=0, rowIndex=0) {
     currentBoard[rowIndex][occupiedIndex] = 0;
     // Add points to turn score
     turnScore += currentBoard[rowIndex][colIndex];
+    // Record tile movement for animation
+    tileMovements.push(
+      trackTileMovement(direction, colIndex, rowIndex, occupiedIndex)
+    );
   }
   // Case: current box is occupied and next box's value is non-matching
   if(direction === 'right') return sortRow(direction, colIndex-1, rowIndex);
@@ -225,7 +235,11 @@ function sortColumn(direction, colIndex=0, rowIndex=0) {
     // Set value of current box to value of first occupied box
     currentBoard[rowIndex][colIndex] = currentBoard[occupiedIndex][colIndex];
     // Set previously occupied box to 0 (unoccupied)
-    currentBoard[occupiedIndex][colIndex] = 0;  
+    currentBoard[occupiedIndex][colIndex] = 0;
+    // Record tile movement for animation
+    tileMovements.push(
+      trackTileMovement(direction, colIndex, rowIndex, occupiedIndex)
+    );  
     // Rerun at current position and check if next occupied box has matching value
     return sortColumn(direction, colIndex, rowIndex);
   }
@@ -237,7 +251,10 @@ function sortColumn(direction, colIndex=0, rowIndex=0) {
     currentBoard[occupiedIndex][colIndex] = 0;
     // Add points to turn score
     turnScore += currentBoard[rowIndex][colIndex];
-    // Sort remaining rows of the column
+    // Record tile movement for animation
+    tileMovements.push(
+      trackTileMovement(direction, colIndex, rowIndex, occupiedIndex)
+    );
   }
   // Case: current box is occupied and next box's value is non-matching
   if(direction === 'down') return sortColumn(direction, colIndex, rowIndex-1);
@@ -288,4 +305,23 @@ function findFirstOccupiedBox(direction, colIndex, rowIndex) {
     }
   }
   return -1; // returns if no boxes with a value were found
+}
+
+function trackTileMovement(direction, colIndex, rowIndex, occupiedIndex) {
+  let originalPos;
+  let previousValue;
+  if(direction === 'left' || direction === 'right') {
+    originalPos = `x${occupiedIndex}-y${rowIndex}`;
+    previousValue = previousBoardUI[`x${occupiedIndex}-y${rowIndex}`].value;
+  } else {
+    originalPos = `x${colIndex}-y${occupiedIndex}`;
+    previousValue = previousBoardUI[`x${occupiedIndex}-y${rowIndex}`].value;
+  }
+  return {
+    direction,
+    originalPos,
+    previousValue,
+    newPos: `x${colIndex}-y${rowIndex}`,
+    newValue: currentBoard[rowIndex][colIndex],
+  }
 }

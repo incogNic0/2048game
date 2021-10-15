@@ -310,18 +310,22 @@ function findFirstOccupiedBox(direction, colIndex, rowIndex) {
 function trackTileMovement(direction, colIndex, rowIndex, occupiedIndex) {
   let originalPos;
   let previousValue;
+  let spacesMoved;
   if(direction === 'left' || direction === 'right') {
     originalPos = `x${occupiedIndex}-y${rowIndex}`;
     previousValue = previousBoardUI[`x${occupiedIndex}-y${rowIndex}`].value;
+    spacesMoved = Math.abs(occupiedIndex - colIndex);
   } else {
     originalPos = `x${colIndex}-y${occupiedIndex}`;
-    previousValue = previousBoardUI[`x${occupiedIndex}-y${rowIndex}`].value;
+    previousValue = previousBoardUI[`x${colIndex}-y${occupiedIndex}`].value;
+    spacesMoved = Math.abs(occupiedIndex - rowIndex);
   }
   return {
     direction,
     originalPos,
     previousValue,
+    spacesMoved,
     newPos: `x${colIndex}-y${rowIndex}`,
-    newValue: currentBoard[rowIndex][colIndex],
+    newValue: currentBoard[rowIndex][colIndex]
   }
 }

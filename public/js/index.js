@@ -1,8 +1,7 @@
 const controlBtns = document.querySelector('.controls-container');
 const scoreboardBtns = document.querySelector('.scoreboard-buttons');
 const gameBoard = document.querySelector('.game-board');
-let initialTouchPos;
-let lastTouchPos;
+
 
 // === EVENT LISTENERS ===
 window.onload = function() {

@@ -1,4 +1,7 @@
 const TouchCtrl = (function () {
+  let initialTouchPos;
+  let lastTouchPos;
+  
 	// Handle the start of gestures
 	function handleSwipeStart(evt) {
 		evt.preventDefault();

@@ -2,17 +2,13 @@ const GameCtrl = (function () {
 	let currentBoardUI;
 	let previousBoardUI;
 	let currentBoard;
-	// let currentBoard = [
-	// 	[0, 0, 0, 0], // 'Occupied' === value > 0
-	// 	[0, 0, 0, 0],
-	// 	[0, 0, 0, 0], // 'Unoccupied' === value = 0
-	// 	[0, 0, 0, 0],
-	// ];
-
+  let tilesMoved;
 	let previouScore = 0; // total game score prior to move
 	let turnScore = 0; // points accrued from recent move
 	let currentScore = 0; // total current game score
 	let bestScore = 0; // best score from all games -- not persistent yet --
+
+  const boxSpacing = Math.floor(document.querySelector('[data-grid=x1-y0]').getBoundingClientRect().left - document.querySelector('[data-grid=x0-y0]').getBoundingClientRect().left);
 
 	//============ UI ==================
 	function newGame() {
@@ -36,7 +32,7 @@ const GameCtrl = (function () {
 		// Select random unoccupied box for new tile location
 		const boxGridPos = selectRandomBox(); // returns `x${xPos}-y${yPos}`
 		if (boxGridPos) {
-			occupyBox(boxGridPos, value); // Update UI to display new tile
+			occupyBox(boxGridPos, value, true); // Update UI to display new tile
 			// Update currentBoard array with new value at index of tile's UI grid position
 			currentBoard[boxGridPos[4]][boxGridPos[1]] = value;
 		} else {
@@ -65,14 +61,14 @@ const GameCtrl = (function () {
 		);
 	}
 
-	// ----------- Display Tiles -----------------------------
-	function occupyBox(gridPos, tileValue) {
+	// ----------- Game Board UI -----------------------------
+	function occupyBox(gridPos, tileValue, popIn=false) {
 		const rowBox = document.querySelector(`[data-grid = ${gridPos}]`);
-		updateValueBox(rowBox.children[0], tileValue);
+		updateValueBox(rowBox.children[0], tileValue, popIn);
 		rowBox.setAttribute("data-occupied", "true");
 	}
 
-	function updateValueBox(valueBoxElement, value) {
+	function updateValueBox(valueBoxElement, value, popIn) { 
 		if (value > 999) {
 			valueBoxElement.classList.add("value-four-digit");
 		} else if (value > 99) {
@@ -80,6 +76,7 @@ const GameCtrl = (function () {
 		}
 		valueBoxElement.textContent = value;
 		valueBoxElement.classList.add("occupied", `bg-${value}`);
+    if(popIn) valueBoxElement.classList.add('pop-in');
 	}
 
 	// Puts tiles in corresponding UI grid positions
@@ -95,26 +92,92 @@ const GameCtrl = (function () {
 		}
 	}
 
+  // Triggers animations for moved tiles, then generates new tile.
+	function updateGameBoard() {
+    for (let i=0, len=tilesMoved.length; i<len; i++) {
+      if(i === len-1) {
+        slideTile(tilesMoved[i], true);
+      } else {
+        slideTile(tilesMoved[i]);
+      }
+    }
+	}
+
 	// Clears and resets all UI tiles
 	function clearGameBoard() {
 		// Get all occupied boxes
 		const occupiedBoxes = document.querySelectorAll("[data-occupied = 'true']");
 		// Resets each occupied box
 		for (const box of occupiedBoxes) {
-			const valueBox = box.children[0];
-			// Remove 'occupy' and 'bg-###' classes
-			valueBox.classList = "value-box";
-			// Remove Value from box
-			valueBox.textContent = "";
-			// Set Box to unoccuped
-			box.setAttribute("data-occupied", "false");
+      resetBox(box)
 		}
 	}
+  // Resets box element to unoccupied
+  function resetBox(boxElement) {
+    boxElement.setAttribute('data-occupied', 'false');
+    boxElement.children[0].classList = 'value-box';
+    boxElement.children[0].textContent = '';
+  }
 
-	// Clears UI and then refills all occupied tiles (values !== 0)
-	function updateGameBoard() {
-		clearGameBoard();
-		fillOccupiedTiles();
+  function slideTile(tile, lastTile=false) {
+    const rowBox = document.querySelector(`[data-grid = ${tile.startPos}]`);
+    const slidingBox = copyTile(rowBox); // copy tile to be animated
+    resetBox(rowBox); // Reset row-box and original child element
+    const tileAnimation = slidingBox.animate(slideAnimation(tile.direction, tile.offset), 200);
+    tileAnimation.onfinish = handleAnimationEnd;
+
+    function handleAnimationEnd() {
+      const gridPos = tile.endPos;
+      const value = currentBoard[gridPos[4]][gridPos[1]];
+      const addPopIn = value > tile.startValue;
+      occupyBox(gridPos, value, addPopIn);
+      slidingBox.remove();
+      if(lastTile) generateRandomTile();
+    }
+  }
+
+  // Clone row-box's child valueBox and append to row-box
+  function copyTile(boxElem) {
+    const copy = boxElem.children[0].cloneNode(true);
+    copy.classList.remove('pop-in');
+    boxElem.appendChild(copy);
+    return copy;
+  }
+
+  function slideAnimation(direction, offset) {
+    if (direction === 'left' || direction === 'right') {
+      return [
+        {transform: `translateX(0)`},
+        {transform: `translateX(${offset})`}
+      ]
+    } else {
+      return [
+        {transform: `translateY(0)`},
+        {transform: `translateY(${offset})`}
+      ]
+    }
+  }
+
+  function movementDetails(direction, colIndex, rowIndex, occupiedIndex) {
+		let startPos; // original position of tile
+    let startValue; // original value of tile
+		let offset; // number of pixels translated for animation
+		if (direction === "left" || direction === "right") {
+			startPos = `x${occupiedIndex}-y${rowIndex}`;
+			startValue = previousBoardUI[`x${occupiedIndex}-y${rowIndex}`].value;
+      offset = (colIndex - occupiedIndex) * boxSpacing; // right pos. - left neg.
+		} else {
+			startPos = `x${colIndex}-y${occupiedIndex}`;
+			startValue = previousBoardUI[`x${colIndex}-y${occupiedIndex}`].value;
+      offset = (rowIndex - occupiedIndex) * boxSpacing;// down pos. - up neg.
+		}
+		return {
+			startPos,
+      startValue,
+      direction,
+      offset: offset.toString() + 'px',
+			endPos: `x${colIndex}-y${rowIndex}`
+		};
 	}
 
 	// --------------- Game State ----------------
@@ -173,7 +236,7 @@ const GameCtrl = (function () {
 	// ========== Movement =====================
 	function moveTiles(direction) {
 		// Clear prior tile movements, and track new movements
-		tileMovements = [];
+    tilesMoved = []
 		// Get board state prior to move to ensure it changes afterwards
 		previousBoardUI = getBoardUIState();
 		if (direction === "up" || direction === "down") {
@@ -181,12 +244,10 @@ const GameCtrl = (function () {
 		} else {
 			moveTilesHorizontally(direction);
 		}
-		// If no tiles h change positions do nothing
-		if (!boardChanged()) return; // do nothing if move won't change board
-		updateGameBoard();
+		if (!tilesMoved.length) return; // do nothing no tiles changed positions
+    updateGameBoard();
 		updateScoreBoard();
-		// setTimeout(generateRandomTile, 500);
-		generateRandomTile();
+    // setTimeout(generateRandomTile, 400);
 	}
 
 	// Horizontal Move
@@ -210,10 +271,8 @@ const GameCtrl = (function () {
 			currentBoard[rowIndex][colIndex] = currentBoard[rowIndex][occupiedIndex];
 			// Set previously occupied box to unoccupied
 			currentBoard[rowIndex][occupiedIndex] = 0;
-			// Record tile movement changes for animation
-			tileMovements.push(
-				trackTileMovement(direction, colIndex, rowIndex, occupiedIndex)
-			);
+			// Track moved tiles and movement details for animation
+      tilesMoved.push(movementDetails(direction, colIndex, rowIndex, occupiedIndex))
 			// Rerun at current position and check if next tile value matches
 			return sortRow(direction, colIndex, rowIndex);
 		}
@@ -227,10 +286,8 @@ const GameCtrl = (function () {
 			currentBoard[rowIndex][occupiedIndex] = 0;
 			// Add points to turn score
 			turnScore += currentBoard[rowIndex][colIndex];
-			// Record tile movement for animation
-			tileMovements.push(
-				trackTileMovement(direction, colIndex, rowIndex, occupiedIndex)
-			);
+			// Track moved tiles and movement details for animation
+      tilesMoved.push(movementDetails(direction, colIndex, rowIndex, occupiedIndex));
 		}
 		// Case: current box is occupied and next box's value is non-matching
 		if (direction === "right") return sortRow(direction, colIndex - 1, rowIndex);
@@ -257,10 +314,8 @@ const GameCtrl = (function () {
 			currentBoard[rowIndex][colIndex] = currentBoard[occupiedIndex][colIndex];
 			// Set previously occupied box to 0 (unoccupied)
 			currentBoard[occupiedIndex][colIndex] = 0;
-			// Record tile movement for animation
-			tileMovements.push(
-				trackTileMovement(direction, colIndex, rowIndex, occupiedIndex)
-			);
+			// Track moved tiles and movement details for animation
+      tilesMoved.push(movementDetails(direction, colIndex, rowIndex, occupiedIndex));
 			// Rerun at current position and check if next occupied box has matching value
 			return sortColumn(direction, colIndex, rowIndex);
 		}
@@ -274,10 +329,8 @@ const GameCtrl = (function () {
 			currentBoard[occupiedIndex][colIndex] = 0;
 			// Add points to turn score
 			turnScore += currentBoard[rowIndex][colIndex];
-			// Record tile movement for animation
-			tileMovements.push(
-				trackTileMovement(direction, colIndex, rowIndex, occupiedIndex)
-			);
+			// Track moved tiles and movement details for animation
+      tilesMoved.push(movementDetails(direction, colIndex, rowIndex, occupiedIndex));
 		}
 		// Case: current box is occupied and next box's value is non-matching
 		if (direction === "down")
@@ -286,18 +339,6 @@ const GameCtrl = (function () {
 	}
 
 	// ============ Utilities ==============
-
-	// Checks if move changes board to determine if move is valid or not
-	function boardChanged() {
-		for (let y = 0, len = currentBoard.length; y < len; y++) {
-			for (let x = 0, len = currentBoard[y].length; x < len; x++) {
-				if (currentBoard[y][x] !== previousBoardUI[`x${x}-y${y}`].value) {
-					return true;
-				}
-			}
-		}
-		return false;
-	}
 
 	// Finds first occupied box's index based on direction or -1
 	function findFirstOccupiedBox(direction, colIndex, rowIndex) {
@@ -331,27 +372,5 @@ const GameCtrl = (function () {
 		return -1; // returns if no boxes with a value were found
 	}
 
-	function trackTileMovement(direction, colIndex, rowIndex, occupiedIndex) {
-		let originalPos;
-		let previousValue;
-		let spacesMoved;
-		if (direction === "left" || direction === "right") {
-			originalPos = `x${occupiedIndex}-y${rowIndex}`;
-			previousValue = previousBoardUI[`x${occupiedIndex}-y${rowIndex}`].value;
-			spacesMoved = Math.abs(occupiedIndex - colIndex);
-		} else {
-			originalPos = `x${colIndex}-y${occupiedIndex}`;
-			previousValue = previousBoardUI[`x${colIndex}-y${occupiedIndex}`].value;
-			spacesMoved = Math.abs(occupiedIndex - rowIndex);
-		}
-		return {
-			direction,
-			originalPos,
-			previousValue,
-			spacesMoved,
-			newPos: `x${colIndex}-y${rowIndex}`,
-			newValue: currentBoard[rowIndex][colIndex],
-		};
-	}
   return {newGame, moveTiles, undoMove};
 })();

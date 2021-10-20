@@ -48,3 +48,12 @@ scoreboardBtns.addEventListener('click', e => {
     GameCtrl.undoMove();
   }
 });
+
+function slideTiles(direction) {
+  for (const tile in tilesMoved) {
+
+  }
+}
+
+
+// -------- TESTING -----------

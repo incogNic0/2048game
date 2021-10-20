@@ -19,6 +19,7 @@
 }
 
 .row-box {
+  position: relative;
   height: 100%;
   width: 21%;
   border-radius: 10px;
@@ -26,6 +27,9 @@
 }
 
 .value-box {
+  position: absolute;
+  top: 0;
+  left: 0;
   height: 100%;
   width: 100%;
   border-radius: 10px;
@@ -34,6 +38,7 @@
   align-items: center;
   opacity: 0;
   font-size: 3.2rem;
+  z-index: 1;
 }
 
 .value-three-digit {
@@ -44,8 +49,11 @@
 }
 
 .occupied {
-  animation: popIn .5s;
   opacity: 1;
+}
+
+.pop-in {
+  animation: popIn .5s;
 }
 
 
@@ -89,16 +97,14 @@
   background-color: slateblue;
 }
 
+
 @keyframes popIn {
   0% {
-
     transform: scale(0);
   }
-
   75% {
     transform: scale(1.1) ;
   }
-
   100% {
     transform: scale(1);
   }
@@ -108,63 +114,10 @@
   0% {
     transform: scale(1);
   }
-
   30% {
     transform: scale(1.1);
   }
   100% {
     transform: scale(0);
   }
-}
-
-@keyframes slideRight {
-  0% {
-    transform: translateX(0);
-  }
-  100% {
-    transform: translateX(500px);
-  }
-}
-
-.slide-right {
-  animation: slideRight .3s;
-}
-
-@keyframes slideLeft {
-  0% {
-    transform: translateX(0);
-  }
-  100% {
-    transform: translateX(-500px);
-  }
-}
-
-.slide-left {
-  animation: slideLeft .3s;
-}
-
-@keyframes slideUp {
-  0% {
-    transform: translateY(0);
-  }
-  100% {
-    transform: translateY(500px);
-  }
-}
-
-.slide-up {
-  animation: slideUp .3s;
-}
-
-@keyframes slideDown {
-  0% {
-    transform: translateY(0);
-  }
-  100% {
-    transform: translateY(500px);
-  }
-}
-
-.slide-right {
-  animation: slideDown .3s;
 }

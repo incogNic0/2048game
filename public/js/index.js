@@ -2,11 +2,8 @@ const controlBtns = document.querySelector('.controls-container');
 const scoreboardBtns = document.querySelector('.scoreboard-buttons');
 const gameBoard = document.querySelector('.game-board');
 
-
-// === EVENT LISTENERS ===
-window.onload = function() {
-  GameCtrl.newGame();
-}
+// Initial Game
+GameCtrl.newGame();
 
 // ====== Swipe Support ===============
 // Check if pointer events are supported.

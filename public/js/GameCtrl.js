@@ -79,21 +79,9 @@ const GameCtrl = (function () {
     if(popIn) valueBoxElement.classList.add('pop-in');
 	}
 
-	// Puts tiles in corresponding UI grid positions
-	function fillOccupiedTiles() {
-		// Loops through currentBoard array
-		for (let y = 0; y < 4; y++) {
-			for (let x = 0; x < 4; x++) {
-				// Create tile in grid-box if value exists, or leave empty
-				if (currentBoard[y][x] > 0) {
-					occupyBox(`x${x}-y${y}`, currentBoard[y][x]);
-				}
-			}
-		}
-	}
-
   // Triggers animations for moved tiles, then generates new tile.
 	function updateGameBoard() {
+    removePopInClass();
     for (let i=0, len=tilesMoved.length; i<len; i++) {
       if(i === len-1) {
         slideTile(tilesMoved[i], true);
@@ -102,6 +90,13 @@ const GameCtrl = (function () {
       }
     }
 	}
+
+  function removePopInClass() {
+    const popInBoxes = document.querySelectorAll('.pop-in');
+    for(const box of popInBoxes) {
+      box.classList.remove('pop-in');
+    }
+  }
 
 	// Clears and resets all UI tiles
 	function clearGameBoard() {
@@ -112,6 +107,7 @@ const GameCtrl = (function () {
       resetBox(box)
 		}
 	}
+
   // Resets box element to unoccupied
   function resetBox(boxElement) {
     boxElement.setAttribute('data-occupied', 'false');
@@ -141,7 +137,6 @@ const GameCtrl = (function () {
   // Clone row-box's child valueBox and append to row-box
   function copyTile(boxElem) {
     const copy = boxElem.children[0].cloneNode(true);
-    copy.classList.remove('pop-in');
     boxElem.appendChild(copy);
     return copy;
   }
@@ -273,15 +268,13 @@ const GameCtrl = (function () {
 			currentBoard[rowIndex][colIndex] = currentBoard[rowIndex][occupiedIndex];
 			// Set previously occupied box to unoccupied
 			currentBoard[rowIndex][occupiedIndex] = 0;
-			// Track moved tiles and movement details for animation
+			// Track moved tile and movement details for animation
       tilesMoved.push(movementDetails(direction, colIndex, rowIndex, occupiedIndex))
-			// Rerun at current position and check if next tile value matches
+			// Rerun at current position and check if next tile's value matches
 			return sortRow(direction, colIndex, rowIndex);
 		}
 		// Case: current box is occupied and next occupied box's value matches
-		if (
-			currentBoard[rowIndex][colIndex] === currentBoard[rowIndex][occupiedIndex]
-		) {
+		if (currentBoard[rowIndex][colIndex] === currentBoard[rowIndex][occupiedIndex]) {
 			// Combine tiles and values at current box position
 			currentBoard[rowIndex][colIndex] *= 2;
 			// Set previously occupied box to unoccupied
@@ -291,11 +284,10 @@ const GameCtrl = (function () {
 			// Track moved tiles and movement details for animation
       tilesMoved.push(movementDetails(direction, colIndex, rowIndex, occupiedIndex));
 		}
-		// Case: current box is occupied and next box's value is non-matching
+		// Case: current box is occupied and next tiles's value is non-matching (move on to next col)
 		if (direction === "right") return sortRow(direction, colIndex - 1, rowIndex);
-		return sortRow(direction, colIndex + 1, rowIndex); // move on to next col in row
-	}
-
+		return sortRow(direction, colIndex + 1, rowIndex); // direction === 'left'
+  }
 	// Vertical Movement
 	function moveTilesVertically(direction) {
 		const numColumns = currentBoard.length;
@@ -322,9 +314,7 @@ const GameCtrl = (function () {
 			return sortColumn(direction, colIndex, rowIndex);
 		}
 		// Case: current box is occupied and next box's value is the same
-		if (
-			currentBoard[rowIndex][colIndex] === currentBoard[occupiedIndex][colIndex]
-		) {
+		if (currentBoard[rowIndex][colIndex] === currentBoard[occupiedIndex][colIndex]) {
 			// Double current box's value
 			currentBoard[rowIndex][colIndex] *= 2;
 			// Set next occupied box index to unoccupied

@@ -1,7 +1,7 @@
 const GameCtrl = (function () {
-	let currentBoardUI;
-	let previousBoardUI;
 	let currentBoard;
+  let previousBoardUI;
+  let tempBoard;
   let tilesMoved;
 	let previouScore = 0; // total game score prior to move
 	let turnScore = 0; // points accrued from recent move
@@ -18,12 +18,12 @@ const GameCtrl = (function () {
 			[0, 0, 0, 0],
 			[0, 0, 0, 0],
 		];
-		previousBoardUI = {};
 		previouScore = 0;
 		currentScore = 0;
 		updateScoreBoard();
 		clearGameBoard();
 		generateRandomTile();
+    previousBoardUI = getBoardUIState();
 	}
 
 	// ------------ New Box ---------------
@@ -116,8 +116,8 @@ const GameCtrl = (function () {
     const slidingBox = copyTile(rowBox); // copy tile to be animated
     resetBox(rowBox); // Reset row-box and original child element
     const slidingAnimation = slideAnimation(tile.direction, tile.offset);
-    const duration = Math.abs(tile.offset) * .6;
-    const tileAnimation = slidingBox.animate(slidingAnimation, duration < 120 ? 120 : duration);
+    const duration = Math.abs(tile.offset) * .65;
+    const tileAnimation = slidingBox.animate(slidingAnimation, duration < 180 ? 180 : duration);
     tileAnimation.onfinish = handleAnimationEnd;
 
     function handleAnimationEnd() {
@@ -156,11 +156,11 @@ const GameCtrl = (function () {
 		let offset; // number of pixels translated for animation
 		if (direction === "left" || direction === "right") {
 			startPos = `x${occupiedIndex}-y${rowIndex}`;
-			startValue = previousBoardUI[`x${occupiedIndex}-y${rowIndex}`].value;
+			startValue = tempBoard[`x${occupiedIndex}-y${rowIndex}`].value;
       offset = (colIndex - occupiedIndex) * boxSpacing; // right pos. - left neg.
 		} else {
 			startPos = `x${colIndex}-y${occupiedIndex}`;
-			startValue = previousBoardUI[`x${colIndex}-y${occupiedIndex}`].value;
+			startValue = tempBoard[`x${colIndex}-y${occupiedIndex}`].value;
       offset = (rowIndex - occupiedIndex) * boxSpacing;// down pos. - up neg.
 		}
 		return {
@@ -218,7 +218,7 @@ const GameCtrl = (function () {
 				occupyBox(gridPos, previousBoardUI[gridPos].value);
 			}
 		}
-		currentBoardUI = getBoardUIState();
+		const currentBoardUI = getBoardUIState();
 		for (const gridPos in currentBoardUI) {
 			currentBoard[gridPos[4]][gridPos[1]] = currentBoardUI[gridPos].value;
 		}
@@ -228,18 +228,19 @@ const GameCtrl = (function () {
 	// ========== Movement =====================
 	function moveTiles(direction) {
 		// Clear prior tile movements, and track new movements
+    tempBoard = getBoardUIState();
     tilesMoved = []
-		// Get board state prior to move to ensure it changes afterwards
-		previousBoardUI = getBoardUIState();
 		if (direction === "up" || direction === "down") {
 			moveTilesVertically(direction);
 		} else {
 			moveTilesHorizontally(direction);
 		}
 		if (!tilesMoved.length) return; // do nothing no tiles changed positions
+    // Get boardUI state prior to move.  Allows undo of current move
+		previousBoardUI = getBoardUIState();
     updateGameBoard();
 		updateScoreBoard();
-    setTimeout(generateRandomTile, 320);
+    setTimeout(generateRandomTile, 350);
 	}
 
 	// Horizontal Move

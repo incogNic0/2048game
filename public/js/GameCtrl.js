@@ -117,7 +117,7 @@ const GameCtrl = (function () {
     resetBox(rowBox); // Reset row-box and original child element
     const slidingAnimation = slideAnimation(tile.direction, tile.offset);
     const duration = Math.abs(tile.offset) * .55;
-    const tileAnimation = slidingBox.animate(slidingAnimation, duration < 120 ? 120 : duration);
+    const tileAnimation = slidingBox.animate(slidingAnimation, duration < 90 ? 90 : duration);
     tileAnimation.onfinish = handleAnimationEnd;
 
     function handleAnimationEnd() {

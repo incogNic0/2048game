@@ -1,6 +1,10 @@
 const controlBtns = document.querySelector('.controls-container');
 const scoreboardBtns = document.querySelector('.scoreboard-buttons');
 const gameBoard = document.querySelector('.game-board');
+const root = document.documentElement;
+
+// set mobile height
+root.style.setProperty('--mobile-height', gameBoard.getBoundingClientRect().width + 'px');
 
 // Initial Game
 GameCtrl.newGame();
@@ -46,11 +50,5 @@ scoreboardBtns.addEventListener('click', e => {
   }
 });
 
-function slideTiles(direction) {
-  for (const tile in tilesMoved) {
-
-  }
-}
 
 
-// -------- TESTING -----------

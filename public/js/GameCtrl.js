@@ -82,12 +82,8 @@ const GameCtrl = (function () {
   // Triggers animations for moved tiles, then generates new tile.
 	function updateGameBoard() {
     removePopInClass();
-    for (let i=0, len=tilesMoved.length; i<len; i++) {
-      if(i === len-1) {
-        slideTile(tilesMoved[i], true);
-      } else {
-        slideTile(tilesMoved[i]);
-      }
+    for(const tile of tilesMoved) {
+      slideTile(tile);
     }
 	}
 
@@ -120,8 +116,8 @@ const GameCtrl = (function () {
     const slidingBox = copyTile(rowBox); // copy tile to be animated
     resetBox(rowBox); // Reset row-box and original child element
     const slidingAnimation = slideAnimation(tile.direction, tile.offset);
-    const duration = Math.abs(tile.offset) * .55;
-    const tileAnimation = slidingBox.animate(slidingAnimation, duration);
+    const duration = Math.abs(tile.offset) * .6;
+    const tileAnimation = slidingBox.animate(slidingAnimation, duration < 120 ? 120 : duration);
     tileAnimation.onfinish = handleAnimationEnd;
 
     function handleAnimationEnd() {
@@ -130,7 +126,6 @@ const GameCtrl = (function () {
       const addPopIn = value > tile.startValue;
       occupyBox(gridPos, value, addPopIn);
       slidingBox.remove();
-      if(lastTile) generateRandomTile();
     }
   }
 
@@ -244,7 +239,7 @@ const GameCtrl = (function () {
 		if (!tilesMoved.length) return; // do nothing no tiles changed positions
     updateGameBoard();
 		updateScoreBoard();
-    // setTimeout(generateRandomTile, 400);
+    setTimeout(generateRandomTile, 320);
 	}
 
 	// Horizontal Move

@@ -62,15 +62,15 @@ const TouchCtrl = (function () {
 		const horitonalSwipe = lastTouchPos.x - initialTouchPos.x;
 		const verticalSwipe = lastTouchPos.y - initialTouchPos.y;
 		if (Math.abs(horitonalSwipe) > Math.abs(verticalSwipe)) {
-			if (horitonalSwipe > 50) {
+			if (horitonalSwipe > 10) {
 				GameCtrl.moveTiles("right");
-			} else if (horitonalSwipe < -50){
+			} else if (horitonalSwipe < -10){
 				GameCtrl.moveTiles("left");
 			}
 		} else {
-			if (verticalSwipe < -50) {
+			if (verticalSwipe < -10) {
 				GameCtrl.moveTiles("up");
-			} else if (verticalSwipe > 50) {
+			} else if (verticalSwipe > -10) {
 				GameCtrl.moveTiles("down");
 			}
 		}

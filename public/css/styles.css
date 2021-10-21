@@ -35,6 +35,7 @@ body {
 @media screen and (max-width: 768px) {
   body {
     padding: 0;
+    font-size: rem;
   }
   .container {
     width: 100vw;
@@ -59,7 +60,7 @@ body {
     width: 48%;
   }
   .instructions {
-    margin: 5px 0;
+    margin-top: 40px;
   }
   .controls-container {
     width: 100vw;
@@ -69,6 +70,7 @@ body {
     height: 70px;
   }
   .game-board {
+    margin-top: 40px;
     width: 100vw;
     height: 100vw;
   }
@@ -96,6 +98,9 @@ body {
   }
   .scoreboard-content-box {
     width: 48%;
+  }
+  .game-board {
+
   }
   .value-box {
     font-size: 2.1rem;

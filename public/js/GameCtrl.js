@@ -123,7 +123,9 @@ const GameCtrl = (function () {
     const rowBox = document.querySelector(`[data-grid = ${tile.startPos}]`);
     const slidingBox = copyTile(rowBox); // copy tile to be animated
     resetBox(rowBox); // Reset row-box and original child element
-    const tileAnimation = slidingBox.animate(slideAnimation(tile.direction, tile.offset), 200);
+    const slidingAnimation = slideAnimation(tile.direction, tile.offset);
+    const duration = Math.abs(tile.offset) * .55;
+    const tileAnimation = slidingBox.animate(slidingAnimation, duration);
     tileAnimation.onfinish = handleAnimationEnd;
 
     function handleAnimationEnd() {
@@ -148,12 +150,12 @@ const GameCtrl = (function () {
     if (direction === 'left' || direction === 'right') {
       return [
         {transform: `translateX(0)`},
-        {transform: `translateX(${offset})`}
+        {transform: `translateX(${offset.toString()}px)`}
       ]
     } else {
       return [
         {transform: `translateY(0)`},
-        {transform: `translateY(${offset})`}
+        {transform: `translateY(${offset.toString()}px)`}
       ]
     }
   }
@@ -175,7 +177,7 @@ const GameCtrl = (function () {
 			startPos,
       startValue,
       direction,
-      offset: offset.toString() + 'px',
+      offset: offset,
 			endPos: `x${colIndex}-y${rowIndex}`
 		};
 	}

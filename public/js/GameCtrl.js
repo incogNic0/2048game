@@ -116,8 +116,8 @@ const GameCtrl = (function () {
     const slidingBox = copyTile(rowBox); // copy tile to be animated
     resetBox(rowBox); // Reset row-box and original child element
     const slidingAnimation = slideAnimation(tile.direction, tile.offset);
-    const duration = Math.abs(tile.offset) * .65;
-    const tileAnimation = slidingBox.animate(slidingAnimation, duration < 180 ? 180 : duration);
+    const duration = Math.abs(tile.offset) * .55;
+    const tileAnimation = slidingBox.animate(slidingAnimation, duration < 120 ? 120 : duration);
     tileAnimation.onfinish = handleAnimationEnd;
 
     function handleAnimationEnd() {
@@ -240,7 +240,7 @@ const GameCtrl = (function () {
 		previousBoardUI = getBoardUIState();
     updateGameBoard();
 		updateScoreBoard();
-    setTimeout(generateRandomTile, 350);
+    setTimeout(generateRandomTile, 320);
 	}
 
 	// Horizontal Move

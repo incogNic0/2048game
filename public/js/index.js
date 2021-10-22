@@ -5,6 +5,10 @@ const root = document.documentElement;
 
 // set mobile height
 root.style.setProperty('--mobile-height', gameBoard.getBoundingClientRect().width + 'px');
+// update height and box grid spacing 
+window.addEventListener('resize', () => {
+  root.style.setProperty('--mobile-height', gameBoard.getBoundingClientRect().width + 'px');
+})
 
 // Initial Game
 GameCtrl.newGame();

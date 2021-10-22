@@ -6,8 +6,8 @@
   margin: auto;
   height: 560px;
   width: 560px;
-  background-color: rgb(120, 120, 120);
-  border-radius: 10px;
+  background-color: rgba(120, 120, 120, .8);
+  border-radius: 6px;
 }
 
 .row {
@@ -22,8 +22,8 @@
   position: relative;
   height: 100%;
   width: 21%;
-  border-radius: 10px;
-  background-color: rgb(180, 180, 180);
+  border-radius: 6px;
+  background-color: rgba(180, 180, 180, .8);
 }
 
 .value-box {
@@ -32,12 +32,13 @@
   left: 0;
   height: 100%;
   width: 100%;
-  border-radius: 10px;
+  color: rgba(235, 235, 235, .9);
+  border-radius: 6px;
   display: flex;
   justify-content: center;
   align-items: center;
   opacity: 0;
-  font-size: 3.2rem;
+  font-size: 3.4rem;
   z-index: 1;
 }
 
@@ -45,7 +46,7 @@
   font-size: 3rem;
 }
 .value-four-digit {
-  font-size: 2.8rem;
+  font-size: 2.7rem;
 }
 
 .occupied {
@@ -53,45 +54,47 @@
 }
 
 .pop-in {
-  animation: popIn .5s;
+  animation: popIn .3s;
 }
 
 
 .bg-2 {
-  background-color: palegoldenrod;
+  background-color: rgba(160, 246, 228, 0.8);
+  color: rgba(70, 70, 70, .9);
 }
 .bg-4 {
-  background-color: burlywood;
+  background-color: rgba(150, 230, 200, .8);
+  color: rgba(70, 70, 70, .9);
 }
 .bg-8 {
-  background-color: chartreuse;
+  background-color: rgba(220, 180, 110, .8);
 }
 .bg-16 {
-  background-color: crimson;
+  background-color: rgba(250, 60, 50, 0.8);
 }
 .bg-32 {
-  background-color: darkmagenta;
+  background-color: rgba(220, 100, 40, 0.8);
 }
 .bg-64 {
-  background-color: darkorange;
+  background-color: rgba(180, 70, 20, 0.8);
 }
 .bg-128 {
-  background-color: darkseagreen;
+  background-color: rgba(160, 190, 150, 0.9);
 }
 .bg-256 {
-  background-color: darksalmon;
+  background-color: rgba(233, 150, 122, 0.8);
 }
 .bg-512 {
-  background-color: goldenrod;
+  background-color: rgba(50, 80, 140, 0.8);
 }
 .bg-1024 {
-  background-color: mediumorchid;
+  background-color: rgba(154, 72, 175, 0.8);
 }
 .bg-2048 {
-  background-color: rebeccapurple;
+  background-color: rgba(102, 51, 153, 0.8);
 }
 .bg-4096 {
-  background-color: sienna;
+  background-color: rgba(140, 40, 50, 0.8);
 }
 .bg-8192 {
   background-color: slateblue;
@@ -107,17 +110,5 @@
   }
   100% {
     transform: scale(1);
-  }
-}
-
-@keyframes popOut {
-  0% {
-    transform: scale(1);
-  }
-  30% {
-    transform: scale(1.1);
-  }
-  100% {
-    transform: scale(0);
   }
 }

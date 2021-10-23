@@ -112,3 +112,50 @@
     transform: scale(1);
   }
 }
+
+.end-game-message {
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  width: 400px;
+  padding: 30px;
+  text-align: center;
+  border-radius: 6px;
+  background-color: burlywood;
+  z-index: 10;
+  transform: translate(-50%, -50%);
+}
+
+.hidden{
+  display: none;
+}
+
+#winning-tile {
+  font-size: 2.2rem;
+  font-weight: 600;
+}
+
+.message-text {
+  font-size: 2rem;
+}
+
+.options {
+  margin-top: 10px;
+  font-size: 1.5rem;
+}
+
+.btn-won {
+  margin-top: 10px;
+  display: inline-block;
+  margin-left: 10px;
+  width: 100px;
+  height: 50px;
+  border-radius: 6px;
+  padding-top: 10px;
+  background-color: rgba(220, 20, 60, 0.8);
+  color: aliceblue;
+}
+
+.btn-won:hover {
+  cursor: pointer;
+}

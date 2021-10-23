@@ -28,7 +28,6 @@ body {
 }
 
 .container {
-
   width: 560px;
   margin: auto;
 }
@@ -102,6 +101,9 @@ body {
   .value-four-digit {
     font-size: 1.8rem;
   }
+  .end-game-message {
+    top: 60%;
+  }
 }
 
 @media screen and (max-width: 320px) {
@@ -113,6 +115,9 @@ body {
   }
   .value-four-digit {
     font-size: 1.6rem;
+  }
+  .end-game-message {
+    top: 66%;
   }
 }
 

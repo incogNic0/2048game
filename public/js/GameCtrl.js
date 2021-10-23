@@ -3,6 +3,7 @@ const GameCtrl = (function () {
   let previousBoardUI;
   let tempBoard;
   let tilesMoved;
+  let winningTile
 	let previouScore = 0; // total game score prior to move
 	let turnScore = 0; // points accrued from recent move
 	let currentScore = 0; // total current game score
@@ -20,6 +21,7 @@ const GameCtrl = (function () {
 		];
 		previouScore = 0;
 		currentScore = 0;
+    winningTile = 2048;
 		updateScoreBoard();
 		clearGameBoard();
 		generateRandomTile();
@@ -85,6 +87,9 @@ const GameCtrl = (function () {
     removePopInClass();
     for(const tile of tilesMoved) {
       slideTile(tile);
+      if(currentBoard[tile.endPos[4]][tile.endPos[1]] === winningTile) {
+        displayWinningMessage();
+      }
     }
 	}
 
@@ -112,7 +117,7 @@ const GameCtrl = (function () {
     boxElement.children[0].textContent = '';
   }
 
-  function slideTile(tile, lastTile=false) {
+  function slideTile(tile) {
     const rowBox = document.querySelector(`[data-grid = ${tile.startPos}]`);
     const slidingBox = copyTile(rowBox); // copy tile to be animated
     resetBox(rowBox); // Reset row-box and original child element
@@ -207,8 +212,30 @@ const GameCtrl = (function () {
 		}
 	}
 
-	function gameOver() {
-		console.log("Game Over :(");
+	function displayWinningMessage() {
+		// Display winning-message
+    const endGameContent = document.querySelector('.end-game-message');
+    endGameContent.classList.remove('hidden');
+    // set text for winning tile value
+    document.querySelector('#winning-tile').textContent = winningTile;
+    // set text for next winning tile value
+    document.querySelector('#next-winning-tile').textContent = winningTile * 2;
+    // add event listener for 'new game' or 'continue' options
+    endGameContent.addEventListener('click', handleWinningTile);
+    document.querySelector('.winning-message').classList.remove('hidden');
+
+
+    function handleWinningTile(evt) {
+      if (evt.target.id === 'continue') {
+        winningTile *= 2;
+        endGameContent.removeEventListener('click', handleWinningTile)
+        endGameContent.classList.add('hidden');
+      } else if(evt.target.id === 'new-game') {
+        newGame();
+        endGameContent.removeEventListener('click', handleWinningTile)
+        endGameContent.classList.add('hidden');
+      }
+    }
 	}
 
 	// Undo previous move only

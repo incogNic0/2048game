@@ -69,6 +69,7 @@
 .instructions {
   margin: 20px 0;
   text-align: center;
+  color: inherit;
 }
 .score-goal {
   font-weight: bold;
@@ -76,6 +77,11 @@
 
 .instructions p {
   display: block;
+  color: inherit;
+}
+
+.instructions p span {
+  color: inherit;
 }
 
 .btn:hover {

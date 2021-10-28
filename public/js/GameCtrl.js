@@ -122,8 +122,8 @@ const GameCtrl = (function () {
     const slidingBox = copyTile(rowBox); // copy tile to be animated
     resetBox(rowBox); // Reset row-box and original child element
     const slidingAnimation = slideAnimation(tile.direction, tile.offset);
-    const duration = Math.abs(tile.offset) * .4;
-    const tileAnimation = slidingBox.animate(slidingAnimation, duration < 90 ? 90 : duration);
+    const duration = Math.abs(tile.offset) * .5;
+    const tileAnimation = slidingBox.animate(slidingAnimation, duration < 110 ? 110 : duration);
     tileAnimation.onfinish = handleAnimationEnd;
 
     function handleAnimationEnd() {
@@ -177,6 +177,18 @@ const GameCtrl = (function () {
 			endPos: `x${colIndex}-y${rowIndex}`
 		};
 	}
+
+  // -------------- Super Secret Dark Mode :) ------------------
+  const bestScoreBox = document.querySelector('.scoreboard-scores').children[1];
+  let counter = 0
+  bestScoreBox.addEventListener('click', ()=> {
+    counter++
+    if(counter >= 5) {
+      document.querySelector('body').classList.toggle('dark-mode-bg');
+      document.querySelector('.instructions').classList.toggle('dark-mode-text');
+      counter = 0;
+    }
+  })
 
 	// --------------- Game State ----------------
 	// Get grid positions and values of all row-box elements

@@ -2,6 +2,7 @@
   --mobile-height: 0;
 }
 
+
 * {
   margin: 0;
   padding: 0;
@@ -34,6 +35,14 @@ body {
 
 .landscape-mode {
   display: none;
+}
+
+.dark-mode-bg{
+  background-color: rgb(59, 57, 57);
+}
+
+.dark-mode-text {
+  color: antiquewhite;
 }
 
 @media screen and (max-width: 768px) {

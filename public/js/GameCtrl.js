@@ -7,8 +7,7 @@ const GameCtrl = (function () {
 	let previouScore = 0; // total game score prior to move
 	let turnScore = 0; // points accrued from recent move
 	let currentScore = 0; // total current game score
-	let bestScore = 0; // best score from all games -- not persistent yet --
-
+	let bestScore = localStorage.getItem('best-score') || 0;
   const boxSpacing = Math.floor(document.querySelector('[data-grid=x1-y0]').getBoundingClientRect().left - document.querySelector('[data-grid=x0-y0]').getBoundingClientRect().left);
 
 	//============ UI ==================
@@ -220,8 +219,9 @@ const GameCtrl = (function () {
 		document.querySelector("#current-score").textContent = currentScore;
 		if (currentScore > bestScore) {
 			bestScore = currentScore;
-			document.querySelector("#best-score").textContent = bestScore;
+      localStorage.setItem('best-score', bestScore);
 		}
+    document.querySelector("#best-score").textContent = bestScore;
 	}
 
 	function displayWinningMessage() {

@@ -54,5 +54,5 @@ scoreboardBtns.addEventListener('click', e => {
   }
 });
 
-
-
+console.log('Hi there!  Thanks for taking an interest and peeking behind the curtains.');
+console.log('If you feel like poking around a little more, you might discover how to switch to dark mode...');

@@ -1,7 +1,7 @@
 const GameCtrl = (function () {
 	let currentBoard;
   let previousBoardUI;
-  let tempBoard;
+  let tempBoard; // used for animations
   let tilesMoved;
   let winningTile
 	let previouScore = 0; // total game score prior to move
@@ -30,11 +30,9 @@ const GameCtrl = (function () {
 	// ------------ New Box ---------------
 	function generateRandomTile() {
 		const value = getValue(); // returns random value of 2 or 4
-		// Select random unoccupied box for new tile location
 		const boxGridPos = selectRandomBox(); // returns `x${xPos}-y${yPos}`
 		if (boxGridPos) {
 			occupyBox(boxGridPos, value, true); // Update UI to display new tile
-			// Update currentBoard array with new value at index of tile's UI grid position
 			currentBoard[boxGridPos[4]][boxGridPos[1]] = value;
 		} else {
 			// All boxes are filled and no valid tile combinations left
@@ -48,15 +46,13 @@ const GameCtrl = (function () {
 		return nums[Math.round(Math.random() * 1)];
 	}
 
-	// Randomly selects location of new tile from empty grid-boxes
+	// Returns grid postion ('x0-y1') of a random unoccupied box or null
 	function selectRandomBox() {
-		// Get all unoccupied boxes
 		const unoccupiedBoxes = document.querySelectorAll(
 			'[data-occupied="false"]'
 		);
 		const numBoxes = unoccupiedBoxes.length;
-		if (!numBoxes) return; //   <script src="public/scripts/UIctrl.js"></script> Game over
-		// Return random unoccupied box grid posistion
+		if (!numBoxes) return null;
 		return unoccupiedBoxes[Math.floor(Math.random() * numBoxes)].getAttribute(
 			"data-grid"
 		);
@@ -101,9 +97,7 @@ const GameCtrl = (function () {
 
 	// Clears and resets all UI tiles
 	function clearGameBoard() {
-		// Get all occupied boxes
 		const occupiedBoxes = document.querySelectorAll("[data-occupied = 'true']");
-		// Resets each occupied box
 		for (const box of occupiedBoxes) {
       resetBox(box)
 		}
@@ -156,17 +150,17 @@ const GameCtrl = (function () {
   }
 
   function movementDetails(direction, colIndex, rowIndex, occupiedIndex) {
-		let startPos; // original position of tile
-    let startValue; // original value of tile
+		let startPos;
+    let startValue;
 		let offset; // number of pixels translated for animation
 		if (direction === "left" || direction === "right") {
 			startPos = `x${occupiedIndex}-y${rowIndex}`;
 			startValue = tempBoard[`x${occupiedIndex}-y${rowIndex}`].value;
-      offset = (colIndex - occupiedIndex) * boxSpacing; // right pos. - left neg.
+      offset = (colIndex - occupiedIndex) * boxSpacing; // right +(pos) / left -(neg)
 		} else {
 			startPos = `x${colIndex}-y${occupiedIndex}`;
 			startValue = tempBoard[`x${colIndex}-y${occupiedIndex}`].value;
-      offset = (rowIndex - occupiedIndex) * boxSpacing;// down pos. - up neg.
+      offset = (rowIndex - occupiedIndex) * boxSpacing;// down +(pos) / up -(neg)
 		}
 		return {
 			startPos,
@@ -225,14 +219,10 @@ const GameCtrl = (function () {
 	}
 
 	function displayWinningMessage() {
-		// Display winning-message
     const endGameContent = document.querySelector('.end-game-message');
     endGameContent.classList.remove('hidden');
-    // set text for winning tile value
     document.querySelector('#winning-tile').textContent = winningTile;
-    // set text for next winning tile value
     document.querySelector('#next-winning-tile').textContent = winningTile * 2;
-    // add event listener for 'new game' or 'continue' options
     endGameContent.addEventListener('click', handleWinningTile);
     document.querySelector('.winning-message').classList.remove('hidden');
 
@@ -267,7 +257,6 @@ const GameCtrl = (function () {
 
 	// ========== Movement =====================
 	function moveTiles(direction) {
-		// Clear prior tile movements, and track new movements
     tempBoard = getBoardUIState();
     tilesMoved = []
 		if (direction === "up" || direction === "down") {
@@ -276,8 +265,7 @@ const GameCtrl = (function () {
 			moveTilesHorizontally(direction);
 		}
 		if (!tilesMoved.length) return; // do nothing no tiles changed positions
-    // Get boardUI state prior to move.  Allows undo of current move
-		previousBoardUI = getBoardUIState();
+		previousBoardUI = getBoardUIState(); // Board state prior to move for undo
     updateGameBoard();
 		updateScoreBoard();
     setTimeout(generateRandomTile, 320);
@@ -294,10 +282,8 @@ const GameCtrl = (function () {
 
 	// Sorts and combines specific matching tiles in a row
 	function sortRow(direction, colIndex = 0, rowIndex = 0) {
-		// Find first occupied box index (not including current index)
 		const occupiedIndex = findFirstOccupiedBox(direction, colIndex, rowIndex); // returns -1 if none
-		// Case: end of row or all boxes are unoccupied
-		if (occupiedIndex < 0) return;
+		if (occupiedIndex < 0) return; // End -- row sorted
 		// Case: current box is unoccupied
 		if (currentBoard[rowIndex][colIndex] === 0) {
 			// Set value of current box to value of first occupied box
@@ -334,10 +320,9 @@ const GameCtrl = (function () {
 	}
 
 	function sortColumn(direction, colIndex = 0, rowIndex = 0) {
-		// Get index of first occupied box relative to current box (not inclusive)
 		const occupiedIndex = findFirstOccupiedBox(direction, colIndex, rowIndex); // returns -1 if none
-		// If no occupied boxes lest in current column move on to next column
-		if (occupiedIndex < 0) return;
+		if (occupiedIndex < 0) return; // End -- column sorted
+
 		// Case: current box is unoccupied
 		if (currentBoard[rowIndex][colIndex] === 0) {
 			// Set value of current box to value of first occupied box
@@ -368,17 +353,8 @@ const GameCtrl = (function () {
 
 	// ============ Utilities ==============
 
-	// Finds first occupied box's index based on direction or -1
+	// Returns first occupied box's index based on direction or -1 if none
 	function findFirstOccupiedBox(direction, colIndex, rowIndex) {
-		const directions = {
-			left: true,
-			right: true,
-			up: true,
-			down: true,
-		};
-		// Throw error if invalid direction inputed
-		if (!directions[direction]) throw "Not a valid direction";
-		// One index is constant thru loop
 		const lenBoard = currentBoard.length;
 		if (direction === "left") {
 			for (let x = colIndex + 1; x < lenBoard; x++) {

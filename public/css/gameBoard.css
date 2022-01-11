@@ -23,7 +23,7 @@
   height: 100%;
   width: 21%;
   border-radius: 6px;
-  background-color: rgba(180, 180, 180, .8);
+  background-color: rgb(180, 180, 180);
 }
 
 .value-box {
@@ -32,7 +32,7 @@
   left: 0;
   height: 100%;
   width: 100%;
-  color: rgba(235, 235, 235, .9);
+  color: rgb(235, 235, 235);
   border-radius: 6px;
   display: flex;
   justify-content: center;
@@ -59,42 +59,42 @@
 
 
 .bg-2 {
-  background-color: rgba(160, 246, 228, 0.8);
-  color: rgba(70, 70, 70, .9);
+  background-color: rgb(160, 246, 228);
+  color: rgba(70, 70, 70);
 }
 .bg-4 {
-  background-color: rgba(150, 230, 200, .8);
-  color: rgba(70, 70, 70, .9);
+  background-color: rgb(150, 230, 200);
+  color: rgb(70, 70, 70);
 }
 .bg-8 {
-  background-color: rgba(220, 180, 110, .8);
+  background-color: rgb(220, 180, 110);
 }
 .bg-16 {
-  background-color: rgba(250, 60, 50, 0.8);
+  background-color: rgb(250, 60, 50);
 }
 .bg-32 {
-  background-color: rgba(220, 100, 40, 0.8);
+  background-color: rgb(220, 100, 40);
 }
 .bg-64 {
-  background-color: rgba(180, 70, 20, 0.8);
+  background-color: rgb(180, 70, 20);
 }
 .bg-128 {
-  background-color: rgba(160, 190, 150, 0.9);
+  background-color: rgb(160, 190, 150);
 }
 .bg-256 {
-  background-color: rgba(233, 150, 122, 0.8);
+  background-color: rgb(233, 150, 122);
 }
 .bg-512 {
-  background-color: rgba(50, 80, 140, 0.8);
+  background-color: rgb(50, 80, 140);
 }
 .bg-1024 {
-  background-color: rgba(154, 72, 175, 0.8);
+  background-color: rgb(154, 72, 175);
 }
 .bg-2048 {
-  background-color: rgba(102, 51, 153, 0.8);
+  background-color: rgb(102, 51, 153);
 }
 .bg-4096 {
-  background-color: rgba(140, 40, 50, 0.8);
+  background-color: rgb(140, 40, 50);
 }
 .bg-8192 {
   background-color: slateblue;
@@ -152,7 +152,7 @@
   height: 50px;
   border-radius: 6px;
   padding-top: 10px;
-  background-color: rgba(220, 20, 60, 0.8);
+  background-color: rgb(220, 20, 60);
   color: aliceblue;
 }
 
